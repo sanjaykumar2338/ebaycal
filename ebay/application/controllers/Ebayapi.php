@@ -16,13 +16,14 @@ class Ebayapi extends CI_Controller {
 	}
 
 	public function readdata(){		
-		$mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv');
+		/*$mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv');
+		print_r($_FILES['keyword']['type']); die;
 		if(!in_array($_FILES['keyword']['type'],$mimes)){
 		  $data['msg'] = 'not valid file';
 		  $data['status'] = 0;
 		  echo json_encode($data);
 		  die;
-		} 
+		} */
 
 		$csv = array();
 		$lines = file($_FILES['keyword']['tmp_name'], FILE_IGNORE_NEW_LINES);
@@ -36,13 +37,13 @@ class Ebayapi extends CI_Controller {
 			$i++;
 		}
 
-		// $main = [];
-		// $main['data'] = $csv;
-		// $main['status'] = 1;
+		/*$main = [];
+		$main['data'] = $csv;
+		$main['status'] = 1;
 
-		// echo json_encode($main);
-		// die;
-
+	    echo json_encode($main);
+		die;
+        */
 		//print_r($csv); die;
 
 		// $a = "TEST's JOB APPLY";
@@ -52,8 +53,8 @@ class Ebayapi extends CI_Controller {
 		// return;
 		$url1 = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.7.0&SECURITY-APPNAME=Whatupb15-d225-40c4-a75d-21bb2c690c8&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=&keywords=";
 		$url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US&paginationInput.entriesPerPage=100";
-		// //paginationInput.pageNumber=1&
-		// $main = $url1.'Mel+Fisher+Real+Pendant'.$url2;
+		//  paginationInput.pageNumber=1&
+		//  $main = $url1.'Mel+Fisher+Real+Pendant'.$url2;
 
 		// 	$ch = curl_init();
 		// 	curl_setopt($ch, CURLOPT_URL, $main);	
@@ -89,6 +90,8 @@ class Ebayapi extends CI_Controller {
 					$total_found_val = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0];
 					$total_found = $total_found_val == 0 ? '12345678' : $total_found_val;
 					array_push($csv[$key], $total_found);
+				}else{
+					array_push($csv[$key], 0);
 				}	
 			}
 		}

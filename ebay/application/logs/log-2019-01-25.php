@@ -217,3 +217,7 @@ ERROR - 2019-01-25 18:51:09 --> 404 Page Not Found: Dist/js
 ERROR - 2019-01-25 18:52:33 --> 404 Page Not Found: Assests/datatables.net-bs
 ERROR - 2019-01-25 18:52:33 --> 404 Page Not Found: Assests/datatables.net-bs
 ERROR - 2019-01-25 18:52:53 --> 404 Page Not Found: Assests/datatables.net-bs
+ERROR - 2019-01-25 17:25:44 --> 404 Page Not Found: Dist/img
+ERROR - 2019-01-25 17:42:43 --> Severity: Notice --> Undefined variable: mines C:\xampp\htdocs\ebaycal\ebay\application\controllers\Ebayapi.php 20
+ERROR - 2019-01-25 17:43:28 --> Severity: error --> Exception: syntax error, unexpected '$_FILES' (T_VARIABLE) C:\xampp\htdocs\ebaycal\ebay\application\controllers\Ebayapi.php 20
+ERROR - 2019-01-25 18:09:15 --> Severity: Error --> Maximum execution time of 60 seconds exceeded C:\xampp\htdocs\ebaycal\ebay\application\controllers\Ebayapi.php 84

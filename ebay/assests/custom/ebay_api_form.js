@@ -1,3 +1,4 @@
+  
   var fileobj;
   function upload_file(e,type) { 
     e.preventDefault();    
@@ -14,8 +15,18 @@
       ajax_file_upload(fileobj);
     };
   }
+  
  
-  function ajax_file_upload(file_obj) {
+ var mytable = $('#example1').DataTable({
+      'paging'      : true,
+      'lengthChange': true,
+      'searching'   : true,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : true
+	});
+ 
+function ajax_file_upload(file_obj) {
     if(file_obj != undefined) {
        $('#pendingResult').show();
 
@@ -34,14 +45,19 @@
           $('#progress_bar').hide();  
           var obj = JSON.parse(response);  
           
-          if(obj.status == 1){   
-
+          if(obj.status == 1){ 
+			
+			console.log(obj.data);
+			
+			var i=1;
             $.each(obj.data, function(k, productInfo) {
-              console.log(productInfo[0]);
+			 
+			  mytable.row.add([i,productInfo[0],productInfo[1],productInfo[2],productInfo[3],productInfo[4],productInfo[5],productInfo[6],productInfo[10]]);	
+              mytable.draw();
+			  i++;
             });             
 
             //$("#popuptableLite tbody").append(tr);
-
           }else{
               alert(obj.msg)              
           }          
@@ -51,13 +67,3 @@
   }
 
 
-  $(function () {  
-    $('#example1').DataTable({
-      'paging'      : true,
-      'lengthChange': true,
-      'searching'   : true,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : true
-    });
-  });
