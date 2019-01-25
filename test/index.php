@@ -24,7 +24,7 @@ foreach ($lines as $key => $value){
 // return;
 $url1 = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.7.0&SECURITY-APPNAME=Whatupb15-d225-40c4-a75d-21bb2c690c8&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=&keywords=";
 $url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US&paginationInput.entriesPerPage=100";
-
+//paginationInput.pageNumber=1&
 // $main = $url1.'Mel+Fisher+Real+Pendant'.$url2;
 
 // 	$ch = curl_init();
