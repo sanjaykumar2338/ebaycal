@@ -88,7 +88,7 @@ class Ebayapi extends CI_Controller {
 	
 		foreach ($csv as $key=>$value) {
 			$keyword = $string = preg_replace("/[\s_]/", "+", $value[1]);
-			$main = $url1.$keyword.$url2.$url3;
+			$main = $url1.$keyword.$url2;
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $main);	
@@ -101,6 +101,7 @@ class Ebayapi extends CI_Controller {
 			if($total['findCompletedItemsResponse'][0]['ack'][0] == 'Success'){
 				if($total['findCompletedItemsResponse'][0]['searchResult'][0]['@count'] > 0){
 					
+				  if($total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0] < 100){	 
 					$total_price = 0;
 					foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
 						$total_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
@@ -111,11 +112,48 @@ class Ebayapi extends CI_Controller {
 					$total_found_val = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0];
 					
 					$category = $total['findCompletedItemsResponse'][0]['searchResult'][0]['item'][0]['primaryCategory'][0]['categoryName'][0];
-					$total_found = $total_found_val == 0 ? '12345678' : $total_found_val;
+					$total_found = $total_found_val == 0 ? '0' : $total_found_val;
 					
 					array_push($csv[$key], $total_found);
 					array_push($csv[$key], $total_price);
 					array_push($csv[$key], $category);
+				  }else{
+					  
+					$total_found_val = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0];
+					$category = $total['findCompletedItemsResponse'][0]['searchResult'][0]['item'][0]['primaryCategory'][0]['categoryName'][0];
+					$total_pages = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalPages'][0];  
+					
+					
+					$total_main_price = 0;
+					
+					foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
+						$total_main_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+					}
+					
+					for($i=2;$i<=$total_pages;$i++){
+						$main = $main.'&paginationInput.pageNumber='.$i;
+						$ch = curl_init();
+						curl_setopt($ch, CURLOPT_URL, $main);	
+						curl_setopt($ch, CURLOPT_HEADER, 0);
+						curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+						$edata = curl_exec($ch);
+
+						$total = json_decode($edata, true);
+						
+						foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
+							$total_main_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+						}
+
+						//if($i==5){
+						//    break;
+						//}	
+						
+					} 
+					  
+					array_push($csv[$key], $total_found_val);
+					array_push($csv[$key], $total_main_price);
+					array_push($csv[$key], $category);  
+				  }						
 				}else{
 					
 					array_push($csv[$key], 0);
@@ -125,11 +163,11 @@ class Ebayapi extends CI_Controller {
 			}
 		}
 
-		$main = [];
-		$main['data'] = $csv;
-		$main['status'] = 1;
+			$main = [];
+			$main['data'] = $csv;
+			$main['status'] = 1;
 
-		echo json_encode($main);
-		die;
+			echo json_encode($main);
+			die;
 		}
 }
