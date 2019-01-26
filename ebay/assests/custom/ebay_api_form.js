@@ -42,17 +42,23 @@ function ajax_file_upload(file_obj) {
         processData: false,
         data: form_data,
         success:function(response) {
+		  $("#keywords").val(null);	
           $('#progress_bar').hide();  
           var obj = JSON.parse(response);  
           
           if(obj.status == 1){ 
+			$('#example1').DataTable().clear().draw();
 			
 			console.log(obj.data);
 			
 			var i=1;
             $.each(obj.data, function(k, productInfo) {
+			  let price=0;	
+			  if(productInfo[11]){
+				  price = productInfo[11].toFixed(2);
+			  }
 			 
-			  mytable.row.add([i,productInfo[0],productInfo[1],productInfo[2],productInfo[3],productInfo[4],productInfo[5],productInfo[6],productInfo[10]]);	
+			  mytable.row.add([i,productInfo[0],productInfo[1],productInfo[2],productInfo[3],productInfo[4],productInfo[5],productInfo[6],productInfo[10],price,productInfo[12]]);	
               mytable.draw();
 			  i++;
             });             

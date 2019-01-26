@@ -71,6 +71,8 @@
 				  <th>Condition</th>
 				  <th>Packaging</th>
 				  <th>Total Result(s)</th>
+				  <th>Total Amt.(s)</th>
+				  <th>Category</th>
                 </tr>
                 </thead>
                 <tbody>                
