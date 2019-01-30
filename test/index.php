@@ -2,7 +2,7 @@
 $url1="http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.7.0&SECURITY-APPNAME=Whatupb15-d225-40c4-a75d-21bb2c690c8&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=&keywords=";
 $url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US&paginationInput.entriesPerPage=100";
 //paginationInput.pageNumber=1&
-$main = $url1.'Mel+Fisher+Real+Pendant'.$url2;
+$main = $url1.'Microsoft+Sculpt+Mouse'.$url2;
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $main);	
@@ -12,13 +12,23 @@ $edata = curl_exec($ch);
 
 	
 $total = json_decode($edata, true);
-//print_r($total); die;
+$total_main_price = 0;
+$i=0;
+foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
+	                       
+							$total_main_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+							
+							 echo $i++.' @@ '.$row['sellingStatus'][0]['currentPrice'][0]['__value__'].'\n';
+						}
+						
+						echo $total_main_price;
+						die;
 
 $value = array_column($total['findCompletedItemsResponse'][0]['searchResult'],'item');
 $value = array_column($value[0],'sellingStatus');
 
 if (!function_exists('array_column')) {
-    function array_column($array, $columnKey, $indexKey = null)
+    function array_column($value, $columnKey, $indexKey = null)
     {
         $result = array();
         foreach ($array as $subArray) {
