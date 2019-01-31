@@ -134,3 +134,20 @@ $("#byurl").click(function(e) {
         }
     });
 });
+
+
+
+
+$('#userlisttable').DataTable({
+    'paging': true,
+    'lengthChange': false,
+    'searching': true,
+    'ordering': true,
+    'info': true,
+    'autoWidth': true,
+    'scrollX': true,
+     dom: 'Blfrtip',
+        buttons: [
+           'csv','pdf'
+      ]
+});
