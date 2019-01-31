@@ -141,7 +141,7 @@ class Ebayapi extends CI_Controller {
 						$total = json_decode($edata, true);
 						
 						foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
-							$total_main_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+							$total_main_price += (int) $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 						}
 
 						//if($i==5){
@@ -169,5 +169,167 @@ class Ebayapi extends CI_Controller {
 
 			echo json_encode($main);
 			die;
+		}
+
+		public function readdatabyurl(){
+			require_once APPPATH.'third_party/simple_html_dom.php';
+
+			$html = file_get_html($this->input->post('url', true));
+
+			$table = $html->find('tr');
+			$csv = [];
+
+			$i=0;
+			foreach($table as $element)
+			{	
+				if($i!=0){
+					$td = array();
+					$b=0;
+					foreach( $element->find('td') as $row)  
+				    {
+				       if($b==0){
+				       		$arr = explode(' ',$row->plaintext);
+				       		
+				       		$str = '';
+				       		foreach ($arr as $value) {
+				       			$t = '';
+				       			$t = preg_replace("/\s|&nbsp;/",'',trim($value));
+				       			$str .= $t.'+';	
+				       		}
+				       		//echo $str; die;
+				       		//print_r($arr); die;
+
+				       		$td [] = $str;
+				    	}else{
+				        	$td [] = preg_replace("/\s|&nbsp;/",' ',trim($row->plaintext));
+				    	}
+				    	$b++;	
+				    }					
+					$csv[] = $td;  
+				}
+				$i++;
+			}
+
+
+			//print_r($csv); die;	
+
+
+
+			$url1 = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.7.0&SECURITY-APPNAME=Whatupb15-d225-40c4-a75d-21bb2c690c8&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=&keywords=";
+			$url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US";
+			
+			$date_to = date("Y-m-d");
+			
+			$dt = date("Y-m-d");
+			$bdate  = strtotime("-30 days", strtotime($dt));
+			$data_from = date("Y-m-d", $bdate);
+			
+			$url3 = "&itemFilter(2).name=EndTimeFrom&itemFilter(2).value=".$data_from."T00:00:00.000Z&itemFilter(3).name=EndTimeTo&itemFilter(3).value=".$date_to."T00:00:00.000Z";
+
+			foreach ($csv as $key=>$value) {
+				if(!$value[0]){
+					array_push($csv[$key], 0);
+					array_push($csv[$key], 0);
+					array_push($csv[$key], 0);
+
+					continue;
+				}
+
+				//$keyword = $string = preg_replace("/[\s_]/", "+", $value[0]);
+				$main = $url1.$value[0].$url2;
+				//echo $main; die;
+
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $main);	
+				curl_setopt($ch, CURLOPT_HEADER, 0);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				$edata = curl_exec($ch);
+
+				$total = json_decode($edata, true);
+
+				if(empty($total)){
+					array_push($csv[$key], 0);
+					array_push($csv[$key], 0);
+					array_push($csv[$key], 0);
+
+					continue;
+				}
+
+				//print_r($total); die;
+				
+				if(isset($total['findCompletedItemsResponse']) && $total['findCompletedItemsResponse'][0]['ack'][0] == 'Success'){
+					if($total['findCompletedItemsResponse'][0]['searchResult'][0]['@count'] > 0){
+						
+					  if($total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0] < 100){	 
+						$total_price = 0;
+						foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
+							$total_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+						}
+						
+						
+						
+						$total_found_val = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0];
+						
+						$category = $total['findCompletedItemsResponse'][0]['searchResult'][0]['item'][0]['primaryCategory'][0]['categoryName'][0];
+						$total_found = $total_found_val == 0 ? '0' : $total_found_val;
+						
+						array_push($csv[$key], $total_found);
+						array_push($csv[$key], $total_price);
+						array_push($csv[$key], $category);
+					  }else{
+						  
+						$total_found_val = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0];
+						$category = $total['findCompletedItemsResponse'][0]['searchResult'][0]['item'][0]['primaryCategory'][0]['categoryName'][0];
+						$total_pages = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalPages'][0];  
+						
+						
+						$total_main_price = 0;
+						
+						foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
+							$total_main_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+						}
+						
+						for($i=2;$i<=$total_pages;$i++){
+							$main = $main.'&paginationInput.pageNumber='.$i;
+							$ch = curl_init();
+							curl_setopt($ch, CURLOPT_URL, $main);	
+							curl_setopt($ch, CURLOPT_HEADER, 0);
+							curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+							$edata = curl_exec($ch);
+
+							$total = json_decode($edata, true);
+							
+							foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
+								$total_main_price += (int) $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+							}
+							//if($i==5){
+							//    break;
+							//}								
+						} 
+						  
+						array_push($csv[$key], $total_found_val);
+						array_push($csv[$key], $total_main_price);
+						array_push($csv[$key], $category);  
+					  }						
+					}else{
+						
+						array_push($csv[$key], 0);
+						array_push($csv[$key], 0);
+						array_push($csv[$key], 0);
+					}	
+				}else{
+						array_push($csv[$key], 0);
+						array_push($csv[$key], 0);
+						array_push($csv[$key], 0);
+				}
+		}
+
+			
+			$main = [];
+			$main['data'] = $csv;
+			$main['status'] = 1;
+
+			echo json_encode($main);
+			die;	
 		}
 }
