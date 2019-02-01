@@ -173,8 +173,8 @@ class Ebayapi extends CI_Controller {
 
 		public function readdatabyurl(){
 			require_once APPPATH.'third_party/simple_html_dom.php';
-
-			$html = file_get_html($this->input->post('url', true));
+			$url = $this->input->post('url', true);
+			$html = file_get_html(trim($url));
 
 			$table = $html->find('tr');
 			$csv = [];
@@ -195,10 +195,7 @@ class Ebayapi extends CI_Controller {
 				       			$t = '';
 				       			$t = preg_replace("/\s|&nbsp;/",'',trim($value));
 				       			$str .= $t.'+';	
-				       		}
-				       		//echo $str; die;
-				       		//print_r($arr); die;
-
+				       		}				       		
 				       		$td [] = $str;
 				    	}else{
 				        	$td [] = preg_replace("/\s|&nbsp;/",' ',trim($row->plaintext));
@@ -211,9 +208,17 @@ class Ebayapi extends CI_Controller {
 			}
 
 
-			//print_r($csv); die;	
 
+			$arrlen = count($csv[0]);
+			if($arrlen == 7 || $arrlen == 5){
+				array_shift($csv);
+			}
 
+			foreach ($csv as $key => $value) {
+				if($value[0] == "+"){
+					unset($csv[$key]);
+				}
+			}
 
 			$url1 = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.7.0&SECURITY-APPNAME=Whatupb15-d225-40c4-a75d-21bb2c690c8&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=&keywords=";
 			$url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US";
@@ -226,17 +231,41 @@ class Ebayapi extends CI_Controller {
 			
 			$url3 = "&itemFilter(2).name=EndTimeFrom&itemFilter(2).value=".$data_from."T00:00:00.000Z&itemFilter(3).name=EndTimeTo&itemFilter(3).value=".$date_to."T00:00:00.000Z";
 
+
+			//print_r($csv); 			
+			//die;
+
 			foreach ($csv as $key=>$value) {
-				if(!$value[0]){
-					array_push($csv[$key], 0);
-					array_push($csv[$key], 0);
-					array_push($csv[$key], 0);
-
-					continue;
+				$arr_len = count($value);
+				
+				if($arr_len == 6){
+					$keyword_val = $value[5] != "" ? $value[5] : $value[0];
+					if(!$keyword_val){
+						array_push($csv[$key], 0);
+						array_push($csv[$key], 0);
+						array_push($csv[$key], 0);
+						continue;
+					}
+				}else if($arr_len == 5){
+					$keyword_val = $value[4] != "" ? $value[4] : $value[0];
+					if(!$keyword_val){
+						array_push($csv[$key], 0);
+						array_push($csv[$key], 0);
+						array_push($csv[$key], 0);
+						continue;
+					}
+				}else{
+					$keyword_val = $value[0];
+					if(!$keyword_val){
+						array_push($csv[$key], 0);
+						array_push($csv[$key], 0);
+						array_push($csv[$key], 0);
+						continue;
+					}
 				}
-
+				
 				//$keyword = $string = preg_replace("/[\s_]/", "+", $value[0]);
-				$main = $url1.$value[0].$url2;
+				$main = $url1.$keyword_val.$url2;
 				//echo $main; die;
 
 				$ch = curl_init();

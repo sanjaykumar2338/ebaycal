@@ -1,3 +1,8 @@
+<style type="text/css">
+  .infoMessage{
+    color: red;
+  }
+</style>
 <!-- Content Header (Page header) -->
 <section class="content-header">
    <h1>
@@ -17,27 +22,34 @@
          <!-- general form elements -->
          <div class="box box-primary">
             <div class="box-header with-border">
-               <h2 class="box-title">User Info.</h2>
+               <h2 class="box-title">User Info.</h2>           
             </div>
+            <?php if ($this->session->flashdata('msg')) { ?>
+              <div class="alert alert-success"> <?= $this->session->flashdata('msg') ?> </div>
+            <?php } ?>
             <!-- /.box-header -->
             <!-- form start -->
-             <form role="form" id="userform">
+             <form role="form" method="POST" id="userform" action="<?php echo base_url(); ?>/user/register">
               <div class="box-body">
-			    <div class="form-group">
+			          <div class="form-group">
                   <label for="exampleInputName">Name</label>
-                  <input type="text" class="form-control" id="name" placeholder="Enter Name">
+                  <input type="text" value="<?php echo set_value('name'); ?>" class="form-control" name="name" id="name" placeholder="Enter Name">
+                  <div class="infoMessage"><?php echo form_error('name'); ?></div>
                 </div>
                 <div class="form-group">
                   <label for="exampleInputEmail1">Email</label>
-                  <input type="email" class="form-control" id="email" placeholder="Enter Email">
+                  <input type="email" value="<?php echo set_value('email'); ?>" class="form-control" name="email" id="email" placeholder="Enter Email">
+                  <div class="infoMessage"><?php echo form_error('email'); ?></div>
                 </div>
                 <div class="form-group">
                   <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                  <input type="password" value="<?php echo set_value('password'); ?>" class="form-control" name="password" id="exampleInputPassword1" placeholder="Password">
+                  <div class="infoMessage"><?php echo form_error('password'); ?></div>
                 </div>
 				<div class="form-group">
                   <label for="exampleInputPassword1">Confirm Password</label>
-                  <input type="password" class="form-control" id="exampleInputConfirmPassword1" placeholder="Confirm Password">
+                  <input type="password" value="<?php echo set_value('confirm_password'); ?>" class="form-control" name="confirm_password" id="exampleInputConfirmPassword1" placeholder="Confirm Password">
+                   <div class="infoMessage"><?php echo form_error('confirm_password'); ?></div>
                 </div>                                
               </div>
               <!-- /.box-body -->
@@ -72,10 +84,18 @@
                      <th>Sr. No.</th>
                      <th>Name</th>
                      <th>Email</th>                     
-					 <th>Added On</th>                     
+					           <th>Added On</th>                     
                   </tr>
                </thead>
-               <tbody>                
+               <tbody> 
+               <?php foreach ($users as $key=>$value) { ?>
+                  <tr>
+                    <td><?php echo $key+1; ?>.</td>
+                    <td><?php echo $value['name']; ?></td>
+                    <td><?php echo $value['email']; ?></td>
+                    <td><?php echo $value['added_on']; ?></td>
+                  </tr>                 
+                <?php } ?>
                </tbody>
             </table>
          </div>
