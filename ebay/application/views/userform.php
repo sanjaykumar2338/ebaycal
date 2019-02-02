@@ -92,6 +92,7 @@
                   </tr>
                </thead>
                <tbody> 
+               <?php if(isset($users)) { ?>
                <?php foreach ($users as $key=>$value) { ?>
                   <tr>
                     <td><?php echo $key+1; ?>.</td>
@@ -100,7 +101,7 @@
                     <td><?php echo $value['added_on']; ?></td>
                     <td><a href="<?php echo base_url(); ?>user/delete/<?php echo $value['id']; ?>">Delete</a> | <a href="<?php echo base_url(); ?>user/edit?id=<?php echo $value['id']; ?>">Edit</a></td>
                   </tr>                 
-                <?php } ?>
+                <?php } } ?>
                </tbody>
             </table>
          </div>
