@@ -11,7 +11,7 @@
    </h1>
    <ol class="breadcrumb">
       <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
-      <li><a href="active">Users List</a></li>      
+      <li><a href="#">Users List</a></li>      
    </ol>
 </section>
 <!-- Main content -->
@@ -29,7 +29,7 @@
             <?php } ?>
             <!-- /.box-header -->
             <!-- form start -->
-             <form role="form" method="POST" id="userform" action="<?php echo base_url(); ?>/user/register">
+             <form role="form" method="POST" id="userform" action="<?php echo base_url(); ?>user/register">
               <div class="box-body">
 			          <div class="form-group">
                   <label for="exampleInputName">Name</label>

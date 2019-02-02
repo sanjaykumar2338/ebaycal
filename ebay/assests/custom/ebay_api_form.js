@@ -25,10 +25,15 @@ var mytable = $('#example1').DataTable({
     'info': true,
     'autoWidth': true,
     'scrollX': true,
-     dom: 'Blfrtip',
-        buttons: [
-           'csv','pdf'
-      ]
+    dom: 'Blfrtip',
+     buttons: [{
+       extend: 'pdfHtml5',
+	   orientation: 'landscape',
+	   pageSize: 'LEGAL'
+     }, {
+      extend: 'csv',
+      filename: 'customized_csv_file_name'
+     }]
 });
 
 var mytable2 = $('#example2').DataTable({
@@ -40,9 +45,14 @@ var mytable2 = $('#example2').DataTable({
     'autoWidth': true,
     'scrollX': true,
      dom: 'Blfrtip',
-     buttons: [
-            'csv','pdf'
-     ]
+     buttons: [{
+       extend: 'pdfHtml5',
+	   orientation: 'landscape',
+	   pageSize: 'LEGAL'
+     }, {
+      extend: 'csv',
+      filename: 'customized_csv_file_name'
+     }]
 });
 
 function ajax_file_upload(file_obj) {
@@ -119,13 +129,15 @@ function ajax_file_upload(file_obj) {
 
 $("#byurl").click(function(e) {
     e.preventDefault();
+	
+	//alert($("#url").val());
 
-    /*if (/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test($("#url").val())) {
+    if (/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test($("#url").val())) {
         //alert("valid URL");
     } else {
         alert("invalid URL");
         return false;
-    }*/
+    }
 
     $('#progress_bar2').show();
 

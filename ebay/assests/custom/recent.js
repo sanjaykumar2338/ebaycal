@@ -1,22 +1,3 @@
-var fileobj;
-
-function upload_file(e, type) {
-    e.preventDefault();
-    fileobj = e.target.files[0];
-    console.log(e, type)
-    //fileobj = e.dataTransfer.files[0];
-    ajax_file_upload(fileobj);
-}
-
-function file_explorer() {
-    document.getElementById('selectfile').click();
-    document.getElementById('selectfile').onchange = function() {
-        fileobj = document.getElementById('selectfile').files[0];
-        ajax_file_upload(fileobj);
-    };
-}
-
-
 var mytable3 = $('#example3').DataTable({
     'paging': true,
     'lengthChange': false,
@@ -26,9 +7,14 @@ var mytable3 = $('#example3').DataTable({
     'autoWidth': true,
     'scrollX': true,
      dom: 'Blfrtip',
-        buttons: [
-           'csv','pdf'
-      ]
+     buttons: [{
+       extend: 'pdfHtml5',
+	   orientation: 'landscape',
+	   pageSize: 'LEGAL'
+     }, {
+      extend: 'csv',
+      filename: 'customized_csv_file_name'
+     }]
 });
 
 var mytable4 = $('#example4').DataTable({
@@ -40,9 +26,14 @@ var mytable4 = $('#example4').DataTable({
     'autoWidth': true,
     'scrollX': true,
      dom: 'Blfrtip',
-     buttons: [
-            'csv','pdf'
-     ]
+     buttons: [{
+       extend: 'pdfHtml5',
+	   orientation: 'landscape',
+	   pageSize: 'LEGAL'
+     }, {
+      extend: 'csv',
+      filename: 'customized_csv_file_name'
+     }]
 });
 
 $('#by_csv_recent').on('click', function(e){
@@ -54,11 +45,11 @@ $('#by_csv_recent').on('click', function(e){
         return false;
     }
 
-    ajax_file_upload(select_csv);
+    ajax_file_upload_2(select_csv);
 
 });
 
-function ajax_file_upload(id) {   
+function ajax_file_upload_2(id) {   
         $('#pendingResult').show();
 
         $('#progress_bar').show();
@@ -74,7 +65,7 @@ function ajax_file_upload(id) {
                 var obj = JSON.parse(response);
 
                 if (obj.status == 1) {
-                    $('#example1').DataTable().clear().draw();
+                    $('#example3').DataTable().clear().draw();
 
                     console.log(obj.data);
 
@@ -143,7 +134,7 @@ $("#by_url_recent").click(function(e) {
         $('#progress_bar2').hide();
 
         if (obj.status == 1) {
-            $('#example2').DataTable().clear().draw();
+            $('#example4').DataTable().clear().draw();
 
             console.log(obj.data);
 

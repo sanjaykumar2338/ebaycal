@@ -6,7 +6,7 @@
    </h1>
    <ol class="breadcrumb">
       <li><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
-      <li><a href="active">Ebay API</a></li>      
+      <li><a href="#">Ebay API</a></li>      
    </ol>
 </section>
 <!-- Main content -->
