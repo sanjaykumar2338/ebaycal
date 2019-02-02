@@ -17,16 +17,7 @@ class Ebayapi extends CI_Controller {
 		$this->load->view('default',$data);
 	}
 
-	public function readdata(){		
-		/*$mimes = array('application/vnd.ms-excel','text/plain','text/csv','text/tsv');
-		print_r($_FILES['keyword']['type']); die;
-		if(!in_array($_FILES['keyword']['type'],$mimes)){
-		  $data['msg'] = 'not valid file';
-		  $data['status'] = 0;
-		  echo json_encode($data);
-		  die;
-		} */
-
+	public function readdata(){				
 		$csv = array();
 		$lines = file($_FILES['keyword']['tmp_name'], FILE_IGNORE_NEW_LINES);
 
@@ -39,20 +30,6 @@ class Ebayapi extends CI_Controller {
 			$i++;
 		}
 
-		/*$main = [];
-		$main['data'] = $csv;
-		$main['status'] = 1;
-
-	    echo json_encode($main);
-		die;
-        */
-		//print_r($csv); die;
-
-		// $a = "TEST's JOB APPLY";
-		// $string = preg_replace("/[\s_]/", "+", $a);
-		// echo $string;
-
-		// return;
 		$url1 = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.7.0&SECURITY-APPNAME=Whatupb15-d225-40c4-a75d-21bb2c690c8&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=&keywords=";
 		$url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US";
 		
@@ -63,29 +40,8 @@ class Ebayapi extends CI_Controller {
 		$data_from = date("Y-m-d", $bdate);
 		
 		$url3 = "&itemFilter(2).name=EndTimeFrom&itemFilter(2).value=".$data_from."T00:00:00.000Z&itemFilter(3).name=EndTimeTo&itemFilter(3).value=".$date_to."T00:00:00.000Z";
-		
-		//echo $main = $url1.'iphone+7'.$url2.$url3;
-		//die;
-		//  paginationInput.pageNumber=1&
-		//  $main = $url1.'Mel+Fisher+Real+Pendant'.$url2;
 
-		// 	$ch = curl_init();
-		// 	curl_setopt($ch, CURLOPT_URL, $main);	
-		// 	curl_setopt($ch, CURLOPT_HEADER, 0);
-		// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		// 	$edata = curl_exec($ch);
-
-			
-		// 	$total = json_decode($edata, true);
-		// 	//print_r($total); die;
-
-		//  	print_r($total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0]);
-
-		//  	exit();
-			
-
-		$pkas =0;
-	
+		$pkas =0;	
 		foreach ($csv as $key=>$value) {
 			$keyword = $string = preg_replace("/[\s_]/", "+", $value[1]);
 			$main = $url1.$keyword.$url2;
@@ -103,8 +59,10 @@ class Ebayapi extends CI_Controller {
 					
 				  if($total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0] < 100){	 
 					$total_price = 0;
+					$lowest_buy = [];
 					foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
 						$total_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+						$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 					}
 					
 					
@@ -117,6 +75,7 @@ class Ebayapi extends CI_Controller {
 					array_push($csv[$key], $total_found);
 					array_push($csv[$key], $total_price);
 					array_push($csv[$key], $category);
+					array_push($csv[$key], min($lowest_buy)); 
 				  }else{
 					  
 					$total_found_val = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0];
@@ -125,9 +84,11 @@ class Ebayapi extends CI_Controller {
 					
 					
 					$total_main_price = 0;
-					
+					$lowest_buy = [];
+
 					foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
 						$total_main_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+						$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 					}
 					
 					for($i=2;$i<=$total_pages;$i++){
@@ -142,6 +103,7 @@ class Ebayapi extends CI_Controller {
 						
 						foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
 							$total_main_price += (int) $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+							$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 						}
 
 						//if($i==5){
@@ -152,10 +114,12 @@ class Ebayapi extends CI_Controller {
 					  
 					array_push($csv[$key], $total_found_val);
 					array_push($csv[$key], $total_main_price);
-					array_push($csv[$key], $category);  
+					array_push($csv[$key], $category); 
+					array_push($csv[$key], min($lowest_buy)); 
 				  }						
 				}else{
 					
+					array_push($csv[$key], 0);
 					array_push($csv[$key], 0);
 					array_push($csv[$key], 0);
 					array_push($csv[$key], 0);
@@ -218,7 +182,9 @@ class Ebayapi extends CI_Controller {
 				if($value[0] == "+"){
 					unset($csv[$key]);
 				}
-			}
+			}		
+
+			
 
 			$url1 = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.7.0&SECURITY-APPNAME=Whatupb15-d225-40c4-a75d-21bb2c690c8&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=&keywords=";
 			$url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US";
@@ -244,6 +210,7 @@ class Ebayapi extends CI_Controller {
 						array_push($csv[$key], 0);
 						array_push($csv[$key], 0);
 						array_push($csv[$key], 0);
+						array_push($csv[$key], 0);
 						continue;
 					}
 				}else if($arr_len == 5){
@@ -252,11 +219,13 @@ class Ebayapi extends CI_Controller {
 						array_push($csv[$key], 0);
 						array_push($csv[$key], 0);
 						array_push($csv[$key], 0);
+						array_push($csv[$key], 0);
 						continue;
 					}
 				}else{
 					$keyword_val = $value[0];
 					if(!$keyword_val){
+						array_push($csv[$key], 0);
 						array_push($csv[$key], 0);
 						array_push($csv[$key], 0);
 						array_push($csv[$key], 0);
@@ -280,6 +249,7 @@ class Ebayapi extends CI_Controller {
 					array_push($csv[$key], 0);
 					array_push($csv[$key], 0);
 					array_push($csv[$key], 0);
+					array_push($csv[$key], 0);
 
 					continue;
 				}
@@ -291,8 +261,10 @@ class Ebayapi extends CI_Controller {
 						
 					  if($total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0] < 100){	 
 						$total_price = 0;
+						$lowest_buy = [];
 						foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
 							$total_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+							$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 						}
 						
 						
@@ -305,6 +277,7 @@ class Ebayapi extends CI_Controller {
 						array_push($csv[$key], $total_found);
 						array_push($csv[$key], $total_price);
 						array_push($csv[$key], $category);
+						array_push($csv[$key], min($lowest_buy)); 
 					  }else{
 						  
 						$total_found_val = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0];
@@ -313,9 +286,11 @@ class Ebayapi extends CI_Controller {
 						
 						
 						$total_main_price = 0;
-						
+						$lowest_buy = [];
+
 						foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
 							$total_main_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+							$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 						}
 						
 						for($i=2;$i<=$total_pages;$i++){
@@ -330,6 +305,7 @@ class Ebayapi extends CI_Controller {
 							
 							foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
 								$total_main_price += (int) $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+								$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 							}
 							//if($i==5){
 							//    break;
@@ -338,10 +314,12 @@ class Ebayapi extends CI_Controller {
 						  
 						array_push($csv[$key], $total_found_val);
 						array_push($csv[$key], $total_main_price);
-						array_push($csv[$key], $category);  
+						array_push($csv[$key], $category); 
+						array_push($csv[$key], min($lowest_buy));  
 					  }						
 					}else{
 						
+						array_push($csv[$key], 0);
 						array_push($csv[$key], 0);
 						array_push($csv[$key], 0);
 						array_push($csv[$key], 0);
@@ -350,12 +328,13 @@ class Ebayapi extends CI_Controller {
 						array_push($csv[$key], 0);
 						array_push($csv[$key], 0);
 						array_push($csv[$key], 0);
+						array_push($csv[$key], 0);
 				}
 		}
 
-			
 			$main = [];
 			$main['data'] = $csv;
+			$main['main_arr_len'] = count($csv[0]);	
 			$main['status'] = 1;
 
 			echo json_encode($main);

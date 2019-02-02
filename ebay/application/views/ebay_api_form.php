@@ -97,6 +97,11 @@
                      <th>Total Result(s)</th>
                      <th>Total Amt.(s)</th>
                      <th>Category</th>
+
+                     <th>Avg. Unit Price</th>
+                     <th>Lowest Buy</th>
+                     <th>Avg. Total Price</th>
+                     <th>Max Days</th>
                   </tr>
                </thead>
                <tbody>                
@@ -132,6 +137,11 @@
                      <th>Total Result(s)</th>
                      <th>Total Amt.(s)</th>
                      <th>Category</th>
+
+                     <th>Avg. Unit Price</th>
+                     <th>Lowest Buy</th>
+                     <th>Avg. Total Price</th>
+                     <th>Max Days</th>
                   </tr>
                </thead>
                <tbody>                
