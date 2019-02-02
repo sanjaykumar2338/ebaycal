@@ -22,7 +22,7 @@
          <!-- general form elements -->
          <div class="box box-primary">
             <div class="box-header with-border">
-               <h2 class="box-title">User Info.</h2>           
+               <h1 class="box-title">Add User</h1>           
             </div>
             <?php if ($this->session->flashdata('msg')) { ?>
               <div class="alert alert-success"> <?= $this->session->flashdata('msg') ?> </div>
@@ -75,6 +75,9 @@
       <div class="box">
          <div class="box-header">
             <h2 class="box-title">User Lists</h2>
+            <?php if ($this->session->flashdata('tablemsg')) { ?>
+              <div class="alert alert-success"> <?= $this->session->flashdata('tablemsg') ?> </div>
+            <?php } ?>
          </div>
          <!-- /.box-header -->
          <div class="box-body">
@@ -85,6 +88,7 @@
                      <th>Name</th>
                      <th>Email</th>                     
 					           <th>Added On</th>                     
+                     <th>Action</th>                     
                   </tr>
                </thead>
                <tbody> 
@@ -94,6 +98,7 @@
                     <td><?php echo $value['name']; ?></td>
                     <td><?php echo $value['email']; ?></td>
                     <td><?php echo $value['added_on']; ?></td>
+                    <td><a href="<?php echo base_url(); ?>user/delete/<?php echo $value['id']; ?>">Delete</a> | <a href="<?php echo base_url(); ?>user/edit?id=<?php echo $value['id']; ?>">Edit</a></td>
                   </tr>                 
                 <?php } ?>
                </tbody>
