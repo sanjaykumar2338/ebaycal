@@ -77,6 +77,7 @@
           <ul class="treeview-menu">
             <li><a href="<?php echo base_url(); ?>ebayapi"><i class="fa fa-circle-o"></i>Ebay API</a></li>
 			<li><a href="<?php echo base_url(); ?>user"><i class="fa fa-circle-o"></i>Manage Users</a></li>
+      <li><a href="<?php echo base_url(); ?>recent"><i class="fa fa-circle-o"></i>Manage Recent Search</a></li>
             <li><a href="pages/forms/advanced.html"><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
             <li><a href="pages/forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
           </ul>

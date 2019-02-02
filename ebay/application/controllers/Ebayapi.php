@@ -10,6 +10,7 @@ class Ebayapi extends CI_Controller {
 		ini_set('memory_limit','2048M');
 		
 	    $this->load->helper('url');
+	    $this->load->database();
     }
 
 	public function index(){
@@ -20,6 +21,8 @@ class Ebayapi extends CI_Controller {
 	public function readdata(){				
 		$csv = array();
 		$lines = file($_FILES['keyword']['tmp_name'], FILE_IGNORE_NEW_LINES);
+
+		$file_name = $_FILES['keyword']['name'];
 
 		$i=0;
 
@@ -127,10 +130,14 @@ class Ebayapi extends CI_Controller {
 			}
 		}
 
-			$main = [];
+			$sv_data['csv'] = $file_name;
+			$sv_data['data'] = serialize($csv);
+
+			$this->db->insert('recent_searches',$sv_data);
+
+			$main = [];			
 			$main['data'] = $csv;
 			$main['status'] = 1;
-
 			echo json_encode($main);
 			die;
 		}
@@ -331,6 +338,11 @@ class Ebayapi extends CI_Controller {
 						array_push($csv[$key], 0);
 				}
 		}
+
+			$sv_data['url'] = $url;
+			$sv_data['total_column'] = count($csv[0]);
+			$sv_data['data'] = serialize($csv);
+			$this->db->insert('recent_searches',$sv_data);
 
 			$main = [];
 			$main['data'] = $csv;
