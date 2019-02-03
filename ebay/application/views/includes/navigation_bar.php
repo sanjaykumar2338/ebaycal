@@ -75,8 +75,11 @@
             </span>
           </a>
           <ul class="treeview-menu">
+		    <li><a href="<?php echo base_url(); ?>main"><i class="fa fa-circle-o"></i>Dashboard</a></li>
             <li><a href="<?php echo base_url(); ?>ebayapi"><i class="fa fa-circle-o"></i>Ebay API</a></li>
-			<li><a href="<?php echo base_url(); ?>user"><i class="fa fa-circle-o"></i>Manage Users</a></li>
+			<?php if($this->session->userdata('is_admin')) { ?>
+				<li><a href="<?php echo base_url(); ?>user"><i class="fa fa-circle-o"></i>Manage Users</a></li>
+			<?php } ?>
 			<li><a href="<?php echo base_url(); ?>recent"><i class="fa fa-circle-o"></i>Manage Recent Search</a>
 			</li>           
           </ul>

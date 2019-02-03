@@ -276,19 +276,45 @@ $("#byurl").click(function(e) {
                 });
             }else if(obj.main_arr_len == 9){
                 $.each(obj.data, function(k, productInfo) {
-                    console.log('productInfo', productInfo);
-                    
-                    let price = 0;
-                    if (productInfo[7] && typeof productInfo[7] !== 'undefined') {
-                        price = productInfo[7];// * 100;
-                        //price = price.toFixed(2);
-                    }
-
                     var title = "";
                     title = productInfo[0].replace("++++", " ");
                     title = title.replace("+"," ");
+					
+					//For avg unit price
+                    var avg_unit_price = 0;                        
+                    if(productInfo[6]){                                                                            
+                        if(productInfo[5]){
+                            var total_found = parseInt(productInfo[5]);
+                            var total_prices = parseFloat(productInfo[6]);
+
+                            avg_unit_price = total_prices / total_found;
+
+                            avg_unit_price = avg_unit_price.toFixed(2);
+                        }
+                    }
+					
+					if(total_prices){
+						total_prices = total_prices.toFixed(2);
+					}else{
+						total_prices = 0;
+					}		
+					
+					//For avg subtotal price 
+                    var qty = parseInt(productInfo[1]);
+                    var avg_subtotal_price = parseFloat(avg_unit_price) * qty
+                    avg_subtotal_price = avg_subtotal_price.toFixed(2);
+					
+					
+					//max days 90
+                    var max_days = 0;
+                    if(total_found){
+                        max_days = total_found / 90;
+                        max_days = max_days.toFixed(2);
+                    }
+					
+					
                     
-                    mytable2.row.add([i, title, productInfo[1], productInfo[2], productInfo[3], k, k, k, k,k,k,k,k,k]);
+                    mytable2.row.add([i, title, productInfo[1], productInfo[2], productInfo[3], 0, productInfo[4], productInfo[5], total_prices,productInfo[7],avg_unit_price,productInfo[8],avg_subtotal_price,max_days]);
                     mytable2.draw();
                     i++;
                 });

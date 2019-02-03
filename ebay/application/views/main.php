@@ -16,11 +16,10 @@
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="<?php echo base_url(); ?>assests/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+          <img src="<?php echo base_url(); ?>assests/images/photo.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Alexander Pierce</p>
-          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          <p><?php echo $this->session->userdata('name'); ?></p>      
         </div>
       </div>
       <!-- search form -->
@@ -69,8 +68,8 @@
             <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
 
             <div class="info-box-content">
-              <span class="info-box-text">New Members</span>
-              <span class="info-box-number">2,000</span>
+              <span class="info-box-text">Members</span>
+              <span class="info-box-number"><?php echo $total; ?></span>
             </div>
             <!-- /.info-box-content -->
           </div>

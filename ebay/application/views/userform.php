@@ -45,12 +45,16 @@
                   <label for="exampleInputPassword1">Password</label>
                   <input type="password" value="<?php echo set_value('password'); ?>" class="form-control" name="password" id="exampleInputPassword1" placeholder="Password">
                   <div class="infoMessage"><?php echo form_error('password'); ?></div>
-                </div>
+                </div>				
 				<div class="form-group">
                   <label for="exampleInputPassword1">Confirm Password</label>
                   <input type="password" value="<?php echo set_value('confirm_password'); ?>" class="form-control" name="confirm_password" id="exampleInputConfirmPassword1" placeholder="Confirm Password">
                    <div class="infoMessage"><?php echo form_error('confirm_password'); ?></div>
                 </div>                                
+				<div class="form-group">
+                  <label for="exampleInputPassword1">Admin (Manage Users)</label><br>
+                  <input type="checkbox" id="is_admin" value="0" name="admin">                 
+                </div>
               </div>
               <!-- /.box-body -->
 
@@ -99,7 +103,7 @@
                     <td><?php echo $value['name']; ?></td>
                     <td><?php echo $value['email']; ?></td>
                     <td><?php echo $value['added_on']; ?></td>
-                    <td><a href="<?php echo base_url(); ?>user/delete/<?php echo $value['id']; ?>">Delete</a> | <a href="<?php echo base_url(); ?>user/edit?id=<?php echo $value['id']; ?>">Edit</a></td>
+                    <td><a onclick="return confirm('are you sure')" href="<?php echo base_url(); ?>user/delete/<?php echo $value['id']; ?>">Delete</a> | <a href="<?php echo base_url(); ?>user/edit?id=<?php echo $value['id']; ?>">Edit</a></td>
                   </tr>                 
                 <?php } } ?>
                </tbody>

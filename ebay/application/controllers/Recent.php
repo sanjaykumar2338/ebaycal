@@ -13,6 +13,10 @@ class Recent extends CI_Controller {
     }
 
 	public function index(){
+		if(is_null($this->session->userdata('is_admin')) || empty($this->session->userdata('is_admin'))) {	
+			$this->db->where('user_id',$this->session->userdata('user_id'));
+		}		
+			
 		$rs = $this->db->get('recent_searches')->result_array();
 		
 		$csv = array();

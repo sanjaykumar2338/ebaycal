@@ -8,9 +8,15 @@ class Main extends CI_Controller {
 
 	    
 	    $this->load->helper('url');
+		$this->load->database();
+		$this->loginlib->checkLoginWithRedirect();
     }
 
 	public function index(){
-		$this->load->view('main');
+		$rs = $this->db->get('user');
+		$num_results = $rs->num_rows();
+		
+		$data['total'] = $num_results;
+		$this->load->view('main',$data);
 	}
 }

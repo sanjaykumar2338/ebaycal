@@ -50,7 +50,11 @@
                   <label for="exampleInputPassword1">Confirm Password</label>
                   <input type="password" value="<?php echo set_value('confirm_password',$this->encryption->decrypt($user['password'])); ?>" class="form-control" name="confirm_password" id="exampleInputConfirmPassword1" placeholder="Confirm Password">
                    <div class="infoMessage"><?php echo form_error('confirm_password'); ?></div>
-                </div>                                
+                </div>
+				<div class="form-group">
+                  <label for="exampleInputPassword1">Admin (Manage Users)</label><br>
+                  <input type="checkbox" id="is_admin" <?php echo ($user['is_admin']==1 ? 'checked' : '');?>  value="<?php echo ($user['is_admin']); ?>" name="admin">                 
+                </div>	
               </div>
               <!-- /.box-body -->
 

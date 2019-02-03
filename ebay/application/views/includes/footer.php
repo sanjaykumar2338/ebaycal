@@ -1,16 +1,4 @@
-<footer class="main-footer">
-    <div class="pull-right hidden-xs">
-      <b>Version</b> 2.4.0
-    </div>
-    <strong><a href="#">Ebay Sale Info.</a>.</strong>
-</footer>
-
-  <!-- Control Sidebar -->
-  
-  <!-- /.control-sidebar -->
-  <!-- Add the sidebar's background. This div must be placed
-       immediately after the control sidebar -->
-  <div class="control-sidebar-bg"></div>
+<div class="control-sidebar-bg"></div>
 
 </div>
 <!-- ./wrapper -->

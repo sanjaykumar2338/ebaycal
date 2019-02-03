@@ -142,7 +142,7 @@
                      <th>Item Description</th>
                      <th>Qty(s)</th>
                      <th>Retail Per Unit</th>
-                     <th>Extended Retail</th>
+                      <th>Extended Retail / Total Retail Price</th>
                      <th>BBBY SKU</th>
                      <th>UPC</th>
                      <th>Total Result(s)</th>

@@ -11,6 +11,8 @@ class Ebayapi extends CI_Controller {
 		
 	    $this->load->helper('url');
 	    $this->load->database();
+			
+		$this->loginlib->checkLoginWithRedirect();
     }
 
 	public function index(){
@@ -18,7 +20,18 @@ class Ebayapi extends CI_Controller {
 		$this->load->view('default',$data);
 	}
 
-	public function readdata(){				
+	public function readdata(){	
+		$allowed =  array('csv');
+		$filename = $_FILES['keyword']['name'];
+		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+		if(!in_array($ext,$allowed) ) {
+			$data['status'] = 0;
+			$data['msg'] = 'Please upload valid CSV';    
+			echo json_encode($data);
+			exit();
+		}
+	
 		$csv = array();
 		$lines = file($_FILES['keyword']['tmp_name'], FILE_IGNORE_NEW_LINES);
 
@@ -32,6 +45,8 @@ class Ebayapi extends CI_Controller {
 			}
 			$i++;
 		}
+		
+		//print_r($csv); die;
 
 		$url1 = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.7.0&SECURITY-APPNAME=Whatupb15-d225-40c4-a75d-21bb2c690c8&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=&keywords=";
 		$url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US";
@@ -43,10 +58,22 @@ class Ebayapi extends CI_Controller {
 		$data_from = date("Y-m-d", $bdate);
 		
 		$url3 = "&itemFilter(2).name=EndTimeFrom&itemFilter(2).value=".$data_from."T00:00:00.000Z&itemFilter(3).name=EndTimeTo&itemFilter(3).value=".$date_to."T00:00:00.000Z";
+		
+		if(empty($csv)){
+			$data['status'] = 0;
+			$data['msg'] = 'Empty CSV';    
+			echo json_encode($data);
+			exit();
+		}
 
 		$pkas =0;	
 		foreach ($csv as $key=>$value) {
-			$keyword = $string = preg_replace("/[\s_]/", "+", $value[1]);
+			if($value[7]){
+				$keyword = $value[7];
+			}else{
+				$keyword = $string = preg_replace("/[\s_]/", "+", $value[1]);
+			}
+			
 			$main = $url1.$keyword.$url2;
 
 			$ch = curl_init();
@@ -177,9 +204,15 @@ class Ebayapi extends CI_Controller {
 				}
 				$i++;
 			}
-
-
-
+			
+			
+			if(empty($csv)){
+				$data['status'] = 0;
+				$data['msg'] = 'No data found!';    
+				echo json_encode($data);
+				exit();
+			}
+			
 			$arrlen = count($csv[0]);
 			if($arrlen == 7 || $arrlen == 5){
 				array_shift($csv);
@@ -203,7 +236,8 @@ class Ebayapi extends CI_Controller {
 			$data_from = date("Y-m-d", $bdate);
 			
 			$url3 = "&itemFilter(2).name=EndTimeFrom&itemFilter(2).value=".$data_from."T00:00:00.000Z&itemFilter(3).name=EndTimeTo&itemFilter(3).value=".$date_to."T00:00:00.000Z";
-
+			
+			//$csv[0][0] = 'iphne+7';
 
 			//print_r($csv); 			
 			//die;
@@ -314,9 +348,9 @@ class Ebayapi extends CI_Controller {
 								$total_main_price += (int) $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 								$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 							}
-							//if($i==5){
-							//    break;
-							//}								
+							if($i==2){
+							    break;
+							}								
 						} 
 						  
 						array_push($csv[$key], $total_found_val);
