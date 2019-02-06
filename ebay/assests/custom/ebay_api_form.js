@@ -58,9 +58,14 @@ var mytable2 = $('#example2').DataTable({
 function ajax_file_upload(file_obj) {
     if (file_obj != undefined) {
         $('#pendingResult').show();
+		
+		var keyword_num = '';
+		keyword_num = $('#words_csv').val();
+		
 
         var form_data = new FormData();
         form_data.append('keyword', file_obj);
+		form_data.append('csv_keywords',keyword_num);
 
         $('#progress_bar').show();
 
@@ -140,9 +145,12 @@ $("#byurl").click(function(e) {
     }
 
     $('#progress_bar2').show();
+	
+	var keyword_num = '';
+	keyword_num = $('#words_url').val();
 
     $.post('./ebayapi/readdatabyurl', {
-        url: $("#url").val()
+        url: $("#url").val(),keyword_num: keyword_num
     }, function(data) {
         var obj = JSON.parse(data);
         $('#progress_bar2').hide();

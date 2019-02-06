@@ -68,13 +68,32 @@ class Ebayapi extends CI_Controller {
 
 		$pkas =0;	
 		foreach ($csv as $key=>$value) {
-			if($value[7]){
+			if($value[7] =="test"){
 				$keyword = $value[7];
 			}else{
-				$keyword = $string = preg_replace("/[\s_]/", "+", $value[1]);
-			}
-			
-			$main = $url1.$keyword.$url2;
+				$total_val = $_POST['csv_keywords'];
+				
+				$from_csv_words = str_word_count($value[1]);
+				
+				if($from_csv_words > $total_val){
+					
+				    $total_words = explode(' ',$value[1]);
+					
+					$string_to_search = '';
+					foreach($total_words as $key=>$keywrd){						
+						$string_to_search .= ' '.$keywrd;
+							
+						$final_val = str_word_count(trim($string_to_search));
+						
+						if($final_val == $total_val){
+							break;	
+						}						
+					}
+					$keyword = preg_replace("/[\s_]/", "+", trim($string_to_search));					
+				}else{				
+					$keyword = preg_replace("/[\s_]/", "+", $value[1]);
+				}
+			}	
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $main);	
@@ -271,6 +290,23 @@ class Ebayapi extends CI_Controller {
 						array_push($csv[$key], 0);
 						array_push($csv[$key], 0);
 						continue;
+					}
+				}
+				
+				$user_input = $_POST['keyword_num'];
+				if (!is_numeric($keyword_val) && $user_input){
+					$keyword_arr = explode('+',$keyword_val);
+					$total_url_keyword = count($keyword_arr);
+					
+					if($total_url_keyword > $user_input){
+                        $keyword_val = '';
+					 
+						$keyword_string = '';
+						for($i=1;$i<=$user_input;$i++){							
+							$keyword_val .= $keyword_arr[$i].'+';													
+						}
+						
+						$keyword_val = rtrim($keyword_val,"+");
 					}
 				}
 				

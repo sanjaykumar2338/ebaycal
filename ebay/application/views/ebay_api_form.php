@@ -27,6 +27,10 @@
                      <label for="exampleInputFile">File input</label>
                      <input type="file" name="keywords" class="form-control" id="keywords" onchange="upload_file(event)">                  
                   </div>
+				   <div class="form-group">
+                      <label for="exampleInputFile">How many keywords form description?</label>
+                     <input type="text" name="words_csv" class="form-control" id="words_csv">                  
+                  </div>
                   <div class="form-group" id="progress_bar" style="display: none;">
                      <img src="<?php echo base_url(); ?>assests/custom/images/loader.gif"  style="width: 74px;">
                   </div>
@@ -53,6 +57,10 @@
                   <div class="form-group">
                      <label for="exampleInputFile">URL</label>
                      <input type="text" name="url" id="url" placeholder="Enter URL" class="form-control">                  
+                  </div>
+				   <div class="form-group">
+                     <label for="exampleInputFile">How many keywords form description?</label>
+                     <input type="text" name="words_url" class="form-control" id="words_url">                  
                   </div>
                   <div class="form-group" id="progress_bar2" style="display: none;">
                      <img src="<?php echo base_url(); ?>assests/custom/images/loader.gif"  style="width: 74px;">
