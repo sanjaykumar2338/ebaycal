@@ -127,7 +127,11 @@ function ajax_file_upload(file_obj) {
                 } else {
                     alert(obj.msg)
                 }
-            }
+            }, error: function (request, status, error) {
+			     $('#progress_bar').hide();
+				  $("#keywords").val(null);
+				alert('there is some error , please try again');
+			}
         });
     }
 }
@@ -148,10 +152,11 @@ $("#byurl").click(function(e) {
 	
 	var keyword_num = '';
 	keyword_num = $('#words_url').val();
-
+	
+	
     $.post('./ebayapi/readdatabyurl', {
         url: $("#url").val(),keyword_num: keyword_num
-    }, function(data) {
+    }).done(function(data){
         var obj = JSON.parse(data);
         $('#progress_bar2').hide();
 
@@ -330,6 +335,9 @@ $("#byurl").click(function(e) {
         } else {
             alert(obj.msg)
         }
+    }).fail(function(xhr, status, error) {
+       $('#progress_bar2').hide();
+	   alert('there some error , please try again!');
     });
 });
 

@@ -65,36 +65,29 @@ class Ebayapi extends CI_Controller {
 			echo json_encode($data);
 			exit();
 		}
+		
+		//print_r($csv); die;
 
 		$pkas =0;	
 		foreach ($csv as $key=>$value) {
-			if($value[7] =="test"){
-				$keyword = $value[7];
+			//if($key==1){
+			//	continue;
+			//}
+			if($value[7]){				
+				$keyword = $value[7];				
 			}else{
-				$total_val = $_POST['csv_keywords'];
-				
-				$from_csv_words = str_word_count($value[1]);
-				
-				if($from_csv_words > $total_val){
-					
-				    $total_words = explode(' ',$value[1]);
-					
-					$string_to_search = '';
-					foreach($total_words as $key=>$keywrd){						
-						$string_to_search .= ' '.$keywrd;
-							
-						$final_val = str_word_count(trim($string_to_search));
-						
-						if($final_val == $total_val){
-							break;	
-						}						
-					}
-					$keyword = preg_replace("/[\s_]/", "+", trim($string_to_search));					
-				}else{				
+				$total_val = $_POST['csv_keywords'];	
+				if($total_val){
+					$keyword = implode(' ', array_slice(explode(' ', $value[1]), 0, $total_val));
+					$keyword = preg_replace("/[\s_]/", "+", $keyword);
+				}else{	 
 					$keyword = preg_replace("/[\s_]/", "+", $value[1]);
-				}
-			}	
-
+				}				
+			}
+			
+			//$keyword = preg_replace("/[\s_]/", "+", $value[1]);
+			$main = $url1.$keyword.$url2;	
+            //echo $main; die;
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $main);	
 			curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -150,15 +143,16 @@ class Ebayapi extends CI_Controller {
 
 						$total = json_decode($edata, true);
 						
-						foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
+						if(isset($total['findCompletedItemsResponse'][0]['searchResult'])){
+						  foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
 							$total_main_price += (int) $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 							$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+						  }
 						}
-
-						//if($i==5){
-						//    break;
-						//}	
 						
+						if($i==3){
+							break;
+						}
 					} 
 					  
 					array_push($csv[$key], $total_found_val);
@@ -173,7 +167,13 @@ class Ebayapi extends CI_Controller {
 					array_push($csv[$key], 0);
 					array_push($csv[$key], 0);
 				}	
+			}else{
+					array_push($csv[$key], 0);
+					array_push($csv[$key], 0);
+					array_push($csv[$key], 0);
+					array_push($csv[$key], 0);
 			}
+			//print_r($csv); die;
 		}
 
 			$sv_data['csv'] = $file_name;
@@ -205,15 +205,16 @@ class Ebayapi extends CI_Controller {
 					foreach( $element->find('td') as $row)  
 				    {
 				       if($b==0){
+						    /*echo $row->plaintext; die;
 				       		$arr = explode(' ',$row->plaintext);
-				       		
+				       		//echo $arr; die;
 				       		$str = '';
 				       		foreach ($arr as $value) {
 				       			$t = '';
-				       			$t = preg_replace("/\s|&nbsp;/",'',trim($value));
+				       			$t = $value;//preg_replace("/\s|&nbsp;/",'',trim($value));
 				       			$str .= $t.'+';	
-				       		}				       		
-				       		$td [] = $str;
+				       		}*/				       		
+				       		$td [] = $row->plaintext;
 				    	}else{
 				        	$td [] = preg_replace("/\s|&nbsp;/",' ',trim($row->plaintext));
 				    	}
@@ -238,10 +239,12 @@ class Ebayapi extends CI_Controller {
 			}
 
 			foreach ($csv as $key => $value) {
-				if($value[0] == "+"){
+				if($value[0] == "+" || empty($value[0])){
 					unset($csv[$key]);
 				}
 			}		
+			
+			//print_r($csv); die;
 
 			
 
@@ -293,22 +296,19 @@ class Ebayapi extends CI_Controller {
 					}
 				}
 				
+				//echo $keyword_val; die;
+				
 				$user_input = $_POST['keyword_num'];
-				if (!is_numeric($keyword_val) && $user_input){
-					$keyword_arr = explode('+',$keyword_val);
-					$total_url_keyword = count($keyword_arr);
+				if (!is_numeric($keyword_val) && $user_input){	
+				    //echo $user_input; die;
+                   //echo "here"; die; 		
 					
-					if($total_url_keyword > $user_input){
-                        $keyword_val = '';
-					 
-						$keyword_string = '';
-						for($i=1;$i<=$user_input;$i++){							
-							$keyword_val .= $keyword_arr[$i].'+';													
-						}
-						
-						$keyword_val = rtrim($keyword_val,"+");
-					}
+					$keyword_val = implode(' ', array_slice(explode(' ', $keyword_val), 0, $user_input));
+					$keyword_val = preg_replace("/[\s_]/", "+", $keyword_val);
+					//echo $keyword_val; die;
 				}
+				
+				//echo $keyword_val; die;
 				
 				//$keyword = $string = preg_replace("/[\s_]/", "+", $value[0]);
 				$main = $url1.$keyword_val.$url2;
@@ -384,9 +384,11 @@ class Ebayapi extends CI_Controller {
 								$total_main_price += (int) $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 								$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 							}
-							if($i==2){
-							    break;
-							}								
+							
+							if($i==3){
+								break;
+							}
+														
 						} 
 						  
 						array_push($csv[$key], $total_found_val);
