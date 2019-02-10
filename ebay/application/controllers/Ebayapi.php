@@ -19,18 +19,162 @@ class Ebayapi extends CI_Controller {
 		$data['form'] = $this->load->view('ebay_api_form',array(), true);
 		$this->load->view('default',$data);
 	}
-
+	
 	public function readdata(){	
+	    require_once APPPATH.'third_party/SimpleXLSX.php';	
+		
+		echo '<h1>Parse books.xslx</h1><pre>';
+		
+		$keyword_index = false;
+		$quantity_index = false;		
+		$msrp_index = false;
+		$total_index = false;
+		$cost_index = false;
+		
+		if ( $xlsx = SimpleXLSX::parse($_FILES['keyword']['tmp_name']) ) {
+			$xlsx_data = $xlsx->rows();
+            
+		    foreach($xlsx_data[0] as $key=>$row){				
+				if($row == 'Keyword' || $row == 'UPC' || $row == 'Model' || $row == 'Description' || $row == 'Title'){
+				  if(empty($keyword_index)){					
+					if($row == 'Keyword'){
+						$keyword_index = $key;
+					}	
+					
+					if($row == 'UPC'){
+						$keyword_index = $key;
+					}
+					
+					if($row == 'Model'){
+						$keyword_index = $key;
+					}
+					
+					if($row == 'Description'){
+						$keyword_index = $key;
+					}
+					
+					if($row == 'Title'){
+						$keyword_index = $key;
+					}
+				  }	
+				}
+				
+				if($row == 'QTY' || $row == 'Quantity'){
+				  if(empty($quantity_index)){		
+					if($row == 'QTY'){
+						$quantity_index	= $key;	
+					}
+					
+					if($row == 'Quantity'){
+						$quantity_index	= $key;	
+					}
+				  }
+				}
+				
+				if($row == 'MSRP' || $row == 'Retail' || $row == 'Retail Price' || $row == 'RetailPrice'){
+				  if(empty($msrp_index)){		
+					if($row == 'MSRP'){
+						$msrp_index = $key;
+					}	
+					
+					if($row == 'Retail'){
+						$msrp_index = $key;
+					}
+					
+					if($row == 'Retail Price'){
+						$msrp_index = $key;
+					}
+					
+					if($row == 'RetailPrice'){
+						$msrp_index = $key;
+					}
+				  }	
+				}
+				
+				if($row == 'TOTAL' || $row == 'Extended RetailPrice' || $row == 'Extended Retail Price' || $row == 'Extended Retail' || $row == 'Total Retail Price'){
+				   if(empty($total_index)){		
+					if($row =='TOTAL'){
+						$total_index = $key;
+					}
+
+					if($row =='Extended RetailPrice'){
+						$total_index = $key;
+					}
+
+					if($row =='Extended Retail Price'){
+						$total_index = $key;
+					}
+					
+					if($row =='Extended Retail'){
+						$total_index = $key;
+					}
+					
+					if($row =='Total Retail Price'){
+						$total_index = $key;
+					}
+				   }
+				}
+				
+				if($row == 'Cost' || $row == 'Price'){
+				   if(empty($cost_index)){		
+					if($row == 'Cost'){
+						$cost_index = $key;	
+					}
+					
+					if($row == 'Price'){
+						$cost_index = $key;	
+					}						
+				   }	
+				}
+			}
+				 			
+		} else {
+			echo SimpleXLSX::parseError();
+		}
+		
+		unset($xlsx_data[0]);
+		
+		$main_data = array();
+		foreach($xlsx_data as $row){
+			
+			$single_arr = array();
+			
+			if(!empty($keyword_index)){
+				$single_arr['keyword_index'] = $row[$keyword_index];
+			}
+			
+			if(!empty($quantity_index)){
+				$single_arr['quantity_index'] = $row[$quantity_index];
+			}
+			
+			if(!empty($msrp_index)){
+				$single_arr['msrp_index'] = $row[$msrp_index];
+			}
+			
+			if(!empty($total_index)){
+				$single_arr['total_index'] = $row[$total_index];
+			}
+			
+			if(!empty($cost_index)){
+				$single_arr['cost_index'] = $row[$cost_index];
+			}
+			
+			$main_data[] = $single_arr;
+		}
+		
+		print_r($main_data); die;
+		
+		
 		$allowed =  array('csv');
 		$filename = $_FILES['keyword']['name'];
 		$ext = pathinfo($filename, PATHINFO_EXTENSION);
 
-		if(!in_array($ext,$allowed) ) {
+		/*if(!in_array($ext,$allowed) ) {
 			$data['status'] = 0;
 			$data['msg'] = 'Please upload valid CSV';    
 			echo json_encode($data);
 			exit();
-		}
+		}*/
 	
 		$csv = array();
 		$lines = file($_FILES['keyword']['tmp_name'], FILE_IGNORE_NEW_LINES);
@@ -46,7 +190,7 @@ class Ebayapi extends CI_Controller {
 			$i++;
 		}
 		
-		//print_r($csv); die;
+		print_r($csv); die;
 
 		$url1 = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.7.0&SECURITY-APPNAME=Whatupb15-d225-40c4-a75d-21bb2c690c8&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=&keywords=";
 		$url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US";

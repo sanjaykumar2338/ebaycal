@@ -84,8 +84,7 @@ function ajax_file_upload(file_obj) {
                     $('#example1').DataTable().clear().draw();
 
                     console.log(obj.data);
-
-                    var i = 1;
+					
                     $.each(obj.data, function(k, productInfo) {
                         let price = 0;
                         if (productInfo[11]) {
@@ -117,10 +116,32 @@ function ajax_file_upload(file_obj) {
                             max_days = total_found / 90;
                             max_days = max_days.toFixed(2);
                         }
+						
+						//productInfo[0] - refer to category name upload from csv
+						//productInfo[1] - refer to item description
+						//productInfo[2] - refer to quantity uploaded from csv file
+						//productInfo[3] - refer to retail per unit / MSRP
+						//productInfo[4] - refer to total retails
+						//productInfo[5] - refer to condition
+						//productInfo[6] - refer to packing 
+						//productInfo[10] - total result found from the keyword
+						//price  - refer to averarge unit pirce * quantity
+						//productInfo[12] - refer to category from api
+						//avg_unit_price - refer avg_unit_price or avg_selling_pirce is divided by total result found
+						//productInfo[13] - refer to lowest product of price
+						//avg_subtotal_price - refert to above
+						//max_days - refert to divide total found by 90 default
+						
+						/***calculate total msrp ****/
+						var total_msrp = parseInt(productInfo[3]) * parseInt(productInfo[2]);
+						total_msrp = total_msrp.toFixed(2);
+						
+						mytable.row.add([productInfo[1], productInfo[12], productInfo[2], productInfo[3],total_msrp,productInfo[10],avg_unit_price,productInfo[13],0,productInfo[4],productInfo[6],price,avg_subtotal_price,max_days]);
+                        mytable.draw();                       
 
-                        mytable.row.add([i, productInfo[0], productInfo[1], productInfo[2], productInfo[3], productInfo[4], productInfo[5], productInfo[6], productInfo[10], price, productInfo[12],avg_unit_price,productInfo[13],avg_subtotal_price,max_days]);
-                        mytable.draw();
-                        i++;
+						// old is gold
+                        /*mytable.row.add([productInfo[0], productInfo[1], productInfo[2], productInfo[3], productInfo[4], productInfo[5], productInfo[6], productInfo[10], price, productInfo[12],avg_unit_price,productInfo[13],avg_subtotal_price,max_days]);
+                        mytable.draw();*/
                     });
 
                     //$("#popuptableLite tbody").append(tr);

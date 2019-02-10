@@ -29,7 +29,7 @@
                   </div>
 				   <div class="form-group">
                       <label for="exampleInputFile">How many keywords form description?</label>
-                     <input type="text" name="words_csv" class="form-control" id="words_csv">                  
+                     <input style="width:50px;" type="text" name="words_csv" class="form-control" id="words_csv">                  
                   </div>
                   <div class="form-group" id="progress_bar" style="display: none;">
                      <img src="<?php echo base_url(); ?>assests/custom/images/loader.gif"  style="width: 74px;">
@@ -60,7 +60,7 @@
                   </div>
 				   <div class="form-group">
                      <label for="exampleInputFile">How many keywords form description?</label>
-                     <input type="text" name="words_url" class="form-control" id="words_url">                  
+                     <input style="width:50px;" type="text" name="words_url" class="form-control" id="words_url">                  
                   </div>
                   <div class="form-group" id="progress_bar2" style="display: none;">
                      <img src="<?php echo base_url(); ?>assests/custom/images/loader.gif"  style="width: 74px;">
@@ -94,21 +94,18 @@
             <table id="example1" class="table table-bordered table-striped display nowrap" style="width:100%">
                <thead>
                   <tr>
-                     <th>Sr. No.</th>
-                     <th>Category</th>
-                     <th>Item Description</th>
-                     <th>Qty(s)</th>
-                     <th>Retail Per Unit</th>
+					 <th>Keyword</th>
+                     <th>Category</th>                     
+                     <th>Quantity</th>
+                     <th>MSRP</th>
+					 <th>Total MSRP</th>
+					 <th>Results</th>
+					 <th>Avg Selling Price</th>					
+					 <th>Lowest Selling Price</th>
+					 <th>Cost</th>					 
+					 <th>Avg Sub Price</th>
                      <th>Total Retail</th>
-                     <th>Condition</th>
-                     <th>Packaging</th>
-                     <th>Total Result(s)</th>
-                     <th>Total Amt.(s)</th>
-                     <th>Category</th>
-
-                     <th>Avg. Unit Price</th>
-                     <th>Lowest Buy</th>
-                     <th>Avg. Total Price</th>
+                     <th>Total Amt.(s)</th>                                           
                      <th>Max Days</th>
                   </tr>
                </thead>
