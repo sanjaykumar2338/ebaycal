@@ -21,120 +21,149 @@ class Ebayapi extends CI_Controller {
 	}
 	
 	public function readdata(){	
-	    require_once APPPATH.'third_party/SimpleXLSX.php';	
-		
-		echo '<h1>Parse books.xslx</h1><pre>';
+		require_once APPPATH.'third_party/SimpleXLSX.php';		
+
+		$allowed =  array('csv','xlsx');
+		$filename = $_FILES['keyword']['name'];
+		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+		//echo $ext; die;
+
+		if(!in_array($ext,$allowed) ) {
+			$data['status'] = 0;
+			$data['msg'] = 'Please upload valid CSV or XLSX';    
+			echo json_encode($data);
+			exit();
+		}
 		
 		$keyword_index = false;
 		$quantity_index = false;		
 		$msrp_index = false;
 		$total_index = false;
 		$cost_index = false;
+
+		$file_name = $_FILES['keyword']['name'];
 		
-		if ( $xlsx = SimpleXLSX::parse($_FILES['keyword']['tmp_name']) ) {
-			$xlsx_data = $xlsx->rows();
-            
-		    foreach($xlsx_data[0] as $key=>$row){				
-				if($row == 'Keyword' || $row == 'UPC' || $row == 'Model' || $row == 'Description' || $row == 'Title'){
-				  if(empty($keyword_index)){					
-					if($row == 'Keyword'){
+		if('xlsx' == $ext){			
+			if ( $xlsx = SimpleXLSX::parse($_FILES['keyword']['tmp_name'])) {
+				$xlsx_data = $xlsx->rows();
+			}
+        }
+
+
+        if('csv' == $ext){        	
+        	$xlsx_data = array();
+			$lines = file($_FILES['keyword']['tmp_name'], FILE_IGNORE_NEW_LINES);
+			foreach ($lines as $key => $value){			
+	    		$xlsx_data[$key] = str_getcsv($value);
+			}
+        }
+
+      
+        //print_r($xlsx_data[0]); die;
+        
+
+	    foreach($xlsx_data[0] as $key=>$row){	
+	            $row = strtolower($row);          
+
+				if($row == 'keyword' || $row == 'upc' || $row == 'model' || $row == 'item description' || $row == 'description' || $row == 'title'){
+					if($row == 'keyword'){
 						$keyword_index = $key;
 					}	
 					
-					if($row == 'UPC'){
+					if($row == 'upc'){
 						$keyword_index = $key;
 					}
 					
-					if($row == 'Model'){
+					if($row == 'model'){
 						$keyword_index = $key;
 					}
 					
-					if($row == 'Description'){
+					if($row == 'description'){
+						$keyword_index = $key;
+					}
+
+					if($row == 'item description'){
 						$keyword_index = $key;
 					}
 					
-					if($row == 'Title'){
+					if($row == 'title'){
 						$keyword_index = $key;
-					}
-				  }	
+					}				  
 				}
 				
-				if($row == 'QTY' || $row == 'Quantity'){
+				if($row == 'qty' || $row == 'quantity'){
 				  if(empty($quantity_index)){		
-					if($row == 'QTY'){
+					if($row == 'qty'){
 						$quantity_index	= $key;	
 					}
 					
-					if($row == 'Quantity'){
+					if($row == 'quantity'){
 						$quantity_index	= $key;	
 					}
 				  }
 				}
 				
-				if($row == 'MSRP' || $row == 'Retail' || $row == 'Retail Price' || $row == 'RetailPrice'){
-				  if(empty($msrp_index)){		
-					if($row == 'MSRP'){
+				if($row == 'msrp' || $row == 'retail' || $row == 'retail price' || $row == 'retailprice'){				
+					if($row == 'msrp'){
 						$msrp_index = $key;
 					}	
 					
-					if($row == 'Retail'){
+					if($row == 'retail'){
 						$msrp_index = $key;
 					}
 					
-					if($row == 'Retail Price'){
+					if($row == 'retail price'){
 						$msrp_index = $key;
 					}
 					
-					if($row == 'RetailPrice'){
+					if($row == 'retailprice'){
 						$msrp_index = $key;
-					}
-				  }	
+					}				  
 				}
 				
-				if($row == 'TOTAL' || $row == 'Extended RetailPrice' || $row == 'Extended Retail Price' || $row == 'Extended Retail' || $row == 'Total Retail Price'){
-				   if(empty($total_index)){		
-					if($row =='TOTAL'){
+				if($row == 'total' || $row == 'extended retailprice' || $row == 'extended retail price' || $row == 'extended retail' || $row == 'total retail price'){				   
+					if($row =='total'){
 						$total_index = $key;
 					}
 
-					if($row =='Extended RetailPrice'){
+					if($row =='extended retailprice'){
 						$total_index = $key;
 					}
 
-					if($row =='Extended Retail Price'){
+					if($row =='extended retail price'){
 						$total_index = $key;
 					}
 					
-					if($row =='Extended Retail'){
+					if($row =='extended retail'){
 						$total_index = $key;
 					}
 					
-					if($row =='Total Retail Price'){
+					if($row =='total retail price'){
 						$total_index = $key;
-					}
-				   }
+					}				   
 				}
 				
-				if($row == 'Cost' || $row == 'Price'){
+				if($row == 'cost' || $row == 'price'){
 				   if(empty($cost_index)){		
-					if($row == 'Cost'){
+					if($row == 'cost'){
 						$cost_index = $key;	
 					}
 					
-					if($row == 'Price'){
+					if($row == 'price'){
 						$cost_index = $key;	
 					}						
 				   }	
 				}
-			}
-				 			
-		} else {
-			echo SimpleXLSX::parseError();
-		}
+			}			 			
+
+		
+		
+		//print_r($xlsx_data); die;
 		
 		unset($xlsx_data[0]);
 		
-		$main_data = array();
+		//$main_data = array();
 		foreach($xlsx_data as $row){
 			
 			$single_arr = array();
@@ -161,36 +190,38 @@ class Ebayapi extends CI_Controller {
 			
 			$main_data[] = $single_arr;
 		}
-		
-		print_r($main_data); die;
-		
-		
-		$allowed =  array('csv');
-		$filename = $_FILES['keyword']['name'];
-		$ext = pathinfo($filename, PATHINFO_EXTENSION);
 
-		/*if(!in_array($ext,$allowed) ) {
+
+		if(count($main_data) == 0){
 			$data['status'] = 0;
-			$data['msg'] = 'Please upload valid CSV';    
+			$data['msg'] = 'Empty CSV!';    
 			echo json_encode($data);
 			exit();
-		}*/
-	
-		$csv = array();
-		$lines = file($_FILES['keyword']['tmp_name'], FILE_IGNORE_NEW_LINES);
-
-		$file_name = $_FILES['keyword']['name'];
-
-		$i=0;
-
-		foreach ($lines as $key => $value){
-			if($i >= 1){
-		    	$csv[$key] = str_getcsv($value);
-			}
-			$i++;
 		}
 		
-		print_r($csv); die;
+		foreach ($main_data as $key=>$value) {
+			//print_r($value); die;
+			if (!array_key_exists("keyword_index",$value)){
+				$main_data[$key]['keyword_index'] = "";
+			}
+
+			if (!array_key_exists("quantity_index",$value)){
+				$main_data[$key]['quantity_index'] = "";	
+			}
+
+			if (!array_key_exists("msrp_index",$value)){				
+				$main_data[$key]['msrp_index'] = "";
+			}
+
+			if (!array_key_exists("total_index",$value)){
+				$main_data[$key]['total_index'] = "";
+			}
+
+			if (!array_key_exists("cost_index",$value)){
+				$main_data[$key]['cost_index'] = "";
+			}
+		}
+		
 
 		$url1 = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.7.0&SECURITY-APPNAME=Whatupb15-d225-40c4-a75d-21bb2c690c8&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=&keywords=";
 		$url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US";
@@ -203,29 +234,29 @@ class Ebayapi extends CI_Controller {
 		
 		$url3 = "&itemFilter(2).name=EndTimeFrom&itemFilter(2).value=".$data_from."T00:00:00.000Z&itemFilter(3).name=EndTimeTo&itemFilter(3).value=".$date_to."T00:00:00.000Z";
 		
-		if(empty($csv)){
+		if(empty($main_data)){
 			$data['status'] = 0;
 			$data['msg'] = 'Empty CSV';    
 			echo json_encode($data);
 			exit();
 		}
 		
-		//print_r($csv); die;
+		//print_r($main_data); die;
 
 		$pkas =0;	
-		foreach ($csv as $key=>$value) {
+		foreach ($main_data as $key=>$value) {
 			//if($key==1){
 			//	continue;
 			//}
-			if($value[7]){				
-				$keyword = $value[7];				
+			if(is_numeric($value['keyword_index'])){				
+				$keyword = $value['keyword_index'];				
 			}else{
 				$total_val = $_POST['csv_keywords'];	
 				if($total_val){
-					$keyword = implode(' ', array_slice(explode(' ', $value[1]), 0, $total_val));
+					$keyword = implode(' ', array_slice(explode(' ', $value['keyword_index']), 0, $total_val));
 					$keyword = preg_replace("/[\s_]/", "+", $keyword);
 				}else{	 
-					$keyword = preg_replace("/[\s_]/", "+", $value[1]);
+					$keyword = preg_replace("/[\s_]/", "+", $value['keyword_index']);
 				}				
 			}
 			
@@ -258,10 +289,10 @@ class Ebayapi extends CI_Controller {
 					$category = $total['findCompletedItemsResponse'][0]['searchResult'][0]['item'][0]['primaryCategory'][0]['categoryName'][0];
 					$total_found = $total_found_val == 0 ? '0' : $total_found_val;
 					
-					array_push($csv[$key], $total_found);
-					array_push($csv[$key], $total_price);
-					array_push($csv[$key], $category);
-					array_push($csv[$key], min($lowest_buy)); 
+					$main_data[$key]['total_found'] = $total_found;
+					$main_data[$key]['total_price'] = $total_price;
+					$main_data[$key]['category'] = $category;
+					$main_data[$key]['lowest_buy'] = min($lowest_buy); 
 				  }else{
 					  
 					$total_found_val = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0];
@@ -299,34 +330,34 @@ class Ebayapi extends CI_Controller {
 						}
 					} 
 					  
-					array_push($csv[$key], $total_found_val);
-					array_push($csv[$key], $total_main_price);
-					array_push($csv[$key], $category); 
-					array_push($csv[$key], min($lowest_buy)); 
+					$main_data[$key]['total_found'] = $total_found_val;
+					$main_data[$key]['total_price'] = $total_main_price;
+					$main_data[$key]['category'] = $category; 
+					$main_data[$key]['lowest_buy'] = min($lowest_buy); 
 				  }						
 				}else{
 					
-					array_push($csv[$key], 0);
-					array_push($csv[$key], 0);
-					array_push($csv[$key], 0);
-					array_push($csv[$key], 0);
+					$main_data[$key]['total_found'] = 0;
+					$main_data[$key]['total_price'] = 0;
+					$main_data[$key]['category'] = 0;
+					$main_data[$key]['lowest_buy'] = 0;
 				}	
 			}else{
-					array_push($csv[$key], 0);
-					array_push($csv[$key], 0);
-					array_push($csv[$key], 0);
-					array_push($csv[$key], 0);
+					$main_data[$key]['total_found'] = 0;
+					$main_data[$key]['total_price'] = 0;
+					$main_data[$key]['category'] = 0;
+					$main_data[$key]['lowest_buy'] = 0;
 			}
 			//print_r($csv); die;
 		}
 
 			$sv_data['csv'] = $file_name;
-			$sv_data['data'] = serialize($csv);
+			$sv_data['data'] = serialize($main_data);
 
 			$this->db->insert('recent_searches',$sv_data);
 
 			$main = [];			
-			$main['data'] = $csv;
+			$main['data'] = $main_data;
 			$main['status'] = 1;
 			echo json_encode($main);
 			die;
