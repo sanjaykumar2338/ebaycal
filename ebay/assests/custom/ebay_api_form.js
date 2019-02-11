@@ -79,6 +79,8 @@ function ajax_file_upload(file_obj) {
                 $("#keywords").val(null);
                 $('#progress_bar').hide();
                 var obj = JSON.parse(response);
+				
+				console.log('obj', obj);
 
                 if (obj.status == 1) {
                     $('#example1').DataTable().clear().draw();
@@ -87,17 +89,17 @@ function ajax_file_upload(file_obj) {
 					
                     $.each(obj.data, function(k, productInfo) {
                         let price = 0;
-                        if (productInfo[11]) {
-                            price = productInfo[11].toFixed(2);
+                        if (productInfo.total_price) {
+                            price = productInfo.total_price.toFixed(2);
                         }
 
                         //For avg unit price
                         var avg_unit_price = 0;                        
-                        if(productInfo[11]){                           
-                            avg_unit_price = productInfo[11];                            
-                            if(productInfo[10]){
-                                var total_found = parseInt(productInfo[10]);
-                                var total_price = parseFloat(productInfo[11]);
+                        if(productInfo.total_price){                           
+                            avg_unit_price = productInfo.total_price;                            
+                            if(productInfo.total_found){
+                                var total_found = parseInt(productInfo.total_found);
+                                var total_price = parseFloat(productInfo.total_price);
 
                                 avg_unit_price = total_price / total_found;
 
@@ -106,14 +108,14 @@ function ajax_file_upload(file_obj) {
                         }
 
                         //For avg subtotal price 
-                        var qty = parseInt(productInfo[2]);
+                        var qty = parseInt(productInfo.quantity_index);
                         var avg_subtotal_price = parseFloat(avg_unit_price) * qty
                         avg_subtotal_price = avg_subtotal_price.toFixed(2);
 
                         //max days 90
                         var max_days = 0;
-                        if(total_found){
-                            max_days = total_found / 90;
+                        if(productInfo.total_found){
+                            max_days = productInfo.total_found / 90;
                             max_days = max_days.toFixed(2);
                         }
 						
@@ -133,10 +135,10 @@ function ajax_file_upload(file_obj) {
 						//max_days - refert to divide total found by 90 default
 						
 						/***calculate total msrp ****/
-						var total_msrp = parseInt(productInfo[3]) * parseInt(productInfo[2]);
+						var total_msrp = parseInt(productInfo.msrp_index) * parseInt(productInfo.quantity_index);
 						total_msrp = total_msrp.toFixed(2);
 						
-						mytable.row.add([productInfo[1], productInfo[12], productInfo[2], productInfo[3],total_msrp,productInfo[10],avg_unit_price,productInfo[13],0,productInfo[4],productInfo[6],price,avg_subtotal_price,max_days]);
+						mytable.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, productInfo.msrp_index,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,productInfo.cost_index,productInfo.msrp_index,price,avg_subtotal_price,max_days]);
                         mytable.draw();                       
 
 						// old is gold

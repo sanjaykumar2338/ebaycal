@@ -72,17 +72,17 @@ function ajax_file_upload_2(id) {
                     var i = 1;
                     $.each(obj.data, function(k, productInfo) {
                         let price = 0;
-                        if (productInfo[11]) {
-                            price = productInfo[11].toFixed(2);
+                        if (productInfo.total_price) {
+                            price = productInfo.total_price.toFixed(2);
                         }
 
                         //For avg unit price
                         var avg_unit_price = 0;                        
-                        if(productInfo[11]){                           
-                            avg_unit_price = productInfo[11];                            
-                            if(productInfo[10]){
-                                var total_found = parseInt(productInfo[10]);
-                                var total_price = parseFloat(productInfo[11]);
+                        if(productInfo.total_price){                           
+                            avg_unit_price = productInfo.total_price;                            
+                            if(productInfo.total_found){
+                                var total_found = parseInt(productInfo.total_found);
+                                var total_price = parseFloat(productInfo.total_price);
 
                                 avg_unit_price = total_price / total_found;
 
@@ -91,21 +91,43 @@ function ajax_file_upload_2(id) {
                         }
 
                         //For avg subtotal price 
-                        var qty = parseInt(productInfo[2]);
+                        var qty = parseInt(productInfo.quantity_index);
                         var avg_subtotal_price = parseFloat(avg_unit_price) * qty
                         avg_subtotal_price = avg_subtotal_price.toFixed(2);
 
                         //max days 90
                         var max_days = 0;
-                        if(total_found){
-                            max_days = total_found / 90;
+                        if(productInfo.total_found){
+                            max_days = productInfo.total_found / 90;
                             max_days = max_days.toFixed(2);
                         }
+						
+						//productInfo[0] - refer to category name upload from csv
+						//productInfo[1] - refer to item description
+						//productInfo[2] - refer to quantity uploaded from csv file
+						//productInfo[3] - refer to retail per unit / MSRP
+						//productInfo[4] - refer to total retails
+						//productInfo[5] - refer to condition
+						//productInfo[6] - refer to packing 
+						//productInfo[10] - total result found from the keyword
+						//price  - refer to averarge unit pirce * quantity
+						//productInfo[12] - refer to category from api
+						//avg_unit_price - refer avg_unit_price or avg_selling_pirce is divided by total result found
+						//productInfo[13] - refer to lowest product of price
+						//avg_subtotal_price - refert to above
+						//max_days - refert to divide total found by 90 default
+						
+						/***calculate total msrp ****/
+						var total_msrp = parseInt(productInfo.msrp_index) * parseInt(productInfo.quantity_index);
+						total_msrp = total_msrp.toFixed(2);
+						
+						mytable.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, productInfo.msrp_index,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,productInfo.cost_index,productInfo.msrp_index,price,avg_subtotal_price,max_days]);
+                        mytable.draw();                       
 
-                        mytable3.row.add([i, productInfo[0], productInfo[1], productInfo[2], productInfo[3], productInfo[4], productInfo[5], productInfo[6], productInfo[10], price, productInfo[12],avg_unit_price,productInfo[13],avg_subtotal_price,max_days]);
-                        mytable3.draw();
-                        i++;
-                    });                    
+						// old is gold
+                        /*mytable.row.add([productInfo[0], productInfo[1], productInfo[2], productInfo[3], productInfo[4], productInfo[5], productInfo[6], productInfo[10], price, productInfo[12],avg_unit_price,productInfo[13],avg_subtotal_price,max_days]);
+                        mytable.draw();*/
+                    });                   
                 } else {
                     alert(obj.msg)
                 }

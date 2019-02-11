@@ -61,34 +61,39 @@ class Ebayapi extends CI_Controller {
 
       
         //print_r($xlsx_data[0]); die;
-        
+        $keyword_val_index = '';
+		$upc_val_index = '';
+		$model_val_index = '';
+		$description_val_index = '';
+		$item_description_val_index = '';
+		$title_val_index = '';
 
 	    foreach($xlsx_data[0] as $key=>$row){	
 	            $row = strtolower($row);          
 
 				if($row == 'keyword' || $row == 'upc' || $row == 'model' || $row == 'item description' || $row == 'description' || $row == 'title'){
 					if($row == 'keyword'){
-						$keyword_index = $key;
+						$keyword_val_index = $key;
 					}	
 					
 					if($row == 'upc'){
-						$keyword_index = $key;
+						$upc_val_index = $key;
 					}
 					
 					if($row == 'model'){
-						$keyword_index = $key;
+						$model_val_index = $key;
 					}
 					
 					if($row == 'description'){
-						$keyword_index = $key;
+						$description_val_index = $key;
 					}
 
 					if($row == 'item description'){
-						$keyword_index = $key;
+						$item_description_val_index = $key;
 					}
 					
 					if($row == 'title'){
-						$keyword_index = $key;
+						$title_val_index = $key;
 					}				  
 				}
 				
@@ -164,13 +169,26 @@ class Ebayapi extends CI_Controller {
 		unset($xlsx_data[0]);
 		
 		//$main_data = array();
+	
+		
 		foreach($xlsx_data as $row){
 			
-			$single_arr = array();
+			$single_arr = array();		
 			
-			if(!empty($keyword_index)){
-				$single_arr['keyword_index'] = $row[$keyword_index];
-			}
+			if($keyword_val_index != ''){
+					$single_arr['keyword_index'] = $row[$keyword_val_index];
+				}else if($upc_val_index != ''){
+					$single_arr['keyword_index'] = $row[$upc_val_index];
+				}else if($model_val_index != ''){
+					$single_arr['keyword_index'] = $row[$model_val_index];
+				}else if($description_val_index != ''){
+					$single_arr['keyword_index'] = $row[$description_val_index];
+				}else if($item_description_val_index !=''){
+					$single_arr['keyword_index'] = $row[$item_description_val_index];
+				}else{
+					$single_arr['keyword_index'] = $row[$title_val_index];
+				}
+			
 			
 			if(!empty($quantity_index)){
 				$single_arr['quantity_index'] = $row[$quantity_index];
@@ -190,6 +208,8 @@ class Ebayapi extends CI_Controller {
 			
 			$main_data[] = $single_arr;
 		}
+		
+		//print_r($main_data); die;
 
 
 		if(count($main_data) == 0){
