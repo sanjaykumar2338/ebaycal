@@ -107,6 +107,27 @@
                      <th>Total Retail</th>
                      <th>Total Amt.(s)</th>                                           
                      <th>Max Days</th>
+					 <th>Condition</th>
+					 <th>Daiy Sale</th>
+					 <th>GPM</th>
+                  </tr>
+				   <tr>
+					 <th></th>
+                     <th></th>                     
+                     <th id="header_total_quantity">0</th>
+                     <th id="header_msrp">0</th>
+					 <th id="header_total_msrp">0</th>
+					 <th id="header_total_results">0</th>
+					 <th id="header_avg_selling_price"></th>					
+					 <th id="header_lowest_selling_price"></th>
+					 <th id="header_cost"></th>					 
+					 <th id="header_avg_sub_price"></th>
+                     <th></th>
+                     <th></th>                                           
+                     <th id="header_total_max_days"></th>
+					 <th></th>
+					 <th id="header_daily_sale"></th>
+					 <th id="header_total_gpm"></th>
                   </tr>
                </thead>
                <tbody>                

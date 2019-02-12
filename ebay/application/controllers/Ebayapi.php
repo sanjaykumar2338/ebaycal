@@ -161,7 +161,8 @@ class Ebayapi extends CI_Controller {
 				   }	
 				}
 			}			 			
-
+		
+		
 		
 		
 		//print_r($xlsx_data); die;
@@ -175,17 +176,17 @@ class Ebayapi extends CI_Controller {
 			
 			$single_arr = array();		
 			
-			if($keyword_val_index != ''){
+			if($keyword_val_index != '' && !empty($row[$keyword_val_index])){				
 					$single_arr['keyword_index'] = $row[$keyword_val_index];
-				}else if($upc_val_index != ''){
+				}else if($upc_val_index != '' && !empty($row[$upc_val_index])){				
 					$single_arr['keyword_index'] = $row[$upc_val_index];
-				}else if($model_val_index != ''){
+				}else if($model_val_index != '' && !empty($row[$model_val_index])){
 					$single_arr['keyword_index'] = $row[$model_val_index];
-				}else if($description_val_index != ''){
+				}else if($description_val_index != '' && !empty($row[$description_val_index])){
 					$single_arr['keyword_index'] = $row[$description_val_index];
-				}else if($item_description_val_index !=''){
+				}else if($item_description_val_index !='' && !empty($row[$item_description_val_index])){
 					$single_arr['keyword_index'] = $row[$item_description_val_index];
-				}else{
+				}else if($title_val_index !='' && !empty($row[$title_val_index])){
 					$single_arr['keyword_index'] = $row[$title_val_index];
 				}
 			
@@ -210,6 +211,7 @@ class Ebayapi extends CI_Controller {
 		}
 		
 		//print_r($main_data); die;
+		
 
 
 		if(count($main_data) == 0){
@@ -291,7 +293,7 @@ class Ebayapi extends CI_Controller {
 
 			$total = json_decode($edata, true);
 			
-			if($total['findCompletedItemsResponse'][0]['ack'][0] == 'Success'){
+			if(isset($total['findCompletedItemsResponse']) && $total['findCompletedItemsResponse'][0]['ack'][0] == 'Success'){
 				if($total['findCompletedItemsResponse'][0]['searchResult'][0]['@count'] > 0){
 					
 				  if($total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0] < 100){	 

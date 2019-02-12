@@ -121,8 +121,8 @@ function ajax_file_upload_2(id) {
 						var total_msrp = parseInt(productInfo.msrp_index) * parseInt(productInfo.quantity_index);
 						total_msrp = total_msrp.toFixed(2);
 						
-						mytable.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, productInfo.msrp_index,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,productInfo.cost_index,productInfo.msrp_index,price,avg_subtotal_price,max_days]);
-                        mytable.draw();                       
+						mytable3.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, productInfo.msrp_index,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,productInfo.cost_index,productInfo.msrp_index,price,avg_subtotal_price,max_days]);
+                        mytable3.draw();                       
 
 						// old is gold
                         /*mytable.row.add([productInfo[0], productInfo[1], productInfo[2], productInfo[3], productInfo[4], productInfo[5], productInfo[6], productInfo[10], price, productInfo[12],avg_unit_price,productInfo[13],avg_subtotal_price,max_days]);
