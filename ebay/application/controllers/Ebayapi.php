@@ -285,7 +285,7 @@ class Ebayapi extends CI_Controller {
 			if(is_numeric($value['keyword_index'])){				
 				$keyword = $value['keyword_index'];				
 			}else{
-				$total_val = $_POST['words_csv'];	
+				$total_val = $_POST['csv_keywords'];	
 				if($total_val){
 					$keyword = implode(' ', array_slice(explode(' ', $value['keyword_index']), 0, $total_val));
 					$keyword = preg_replace("/[\s_]/", "+", $keyword);
@@ -663,7 +663,7 @@ class Ebayapi extends CI_Controller {
 			if(is_numeric($value['keyword_index'])){				
 				$keyword = $value['keyword_index'];				
 			}else{
-				$total_val = $_POST['words_url'];	
+				$total_val = $_POST['keyword_num'];	
 				if($total_val){
 					$keyword = implode(' ', array_slice(explode(' ', $value['keyword_index']), 0, $total_val));
 					$keyword = preg_replace("/[\s_]/", "+", $keyword);

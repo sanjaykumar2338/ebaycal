@@ -103,9 +103,7 @@
 					 <th>Avg Selling Price</th>					
 					 <th>Lowest Selling Price</th>
 					 <th>Cost</th>					 
-					 <th>Avg Sub Price</th>
-                     <th>Total Retail</th>
-                     <th>Total Amt.(s)</th>                                           
+					 <th>Avg Sub Price</th>                                                             
                      <th>Max Days</th>
 					 <th>Condition</th>
 					 <th>Daiy Sale</th>
@@ -122,9 +120,7 @@
 					 <th id="header_lowest_selling_price">0</th>
 					 <th id="header_cost">0</th>					 
 					 <th id="header_avg_sub_price">0</th>
-                     <th></th>
-                     <th></th>                                           
-                     <th id="header_total_max_days">0</th>
+					 <th id="header_total_max_days">0</th>
 					 <th></th>
 					 <th id="header_daily_sale">0</th>
 					 <th><span id="header_total_gpm">0</span>&nbsp;<span id="header_gpm_percent">0</span></th>
@@ -138,46 +134,5 @@
       </div>
    </div>
 </div>
-
-<div class="col-md-12">
-   <!-- Horizontal Form -->
-   <div class="box box-info">
-      <!-- /.box-header -->
-      <!-- form start -->
-      <div class="box">
-         <div class="box-header">
-            <h2 class="box-title">Ebay URL DATA</h2>
-         </div>
-         <!-- /.box-header -->
-         <div class="box-body">
-            <table id="example2" class="table table-bordered table-striped display nowrap" style="width:100%">
-               <thead>
-                  <tr>
-                     <th>Sr. No.</th>                  
-                     <th>Item Description</th>
-                     <th>Qty(s)</th>
-                     <th>Retail Per Unit</th>
-                     <th>Extended Retail / Total Retail Price</th>
-                     <th>BBBY SKU</th>
-                     <th>UPC</th>
-                     <th>Total Result(s)</th>
-                     <th>Total Amt.(s)</th>
-                     <th>Category</th>
-
-                     <th>Avg. Unit Price</th>
-                     <th>Lowest Buy</th>
-                     <th>Avg. Total Price</th>
-                     <th>Max Days</th>
-                  </tr>
-               </thead>
-               <tbody>                
-               </tbody>
-            </table>
-         </div>
-         <!-- /.box-body -->
-      </div>
-   </div>
-</div>
-
 </div>      
 </section>
