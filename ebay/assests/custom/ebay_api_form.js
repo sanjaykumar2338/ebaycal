@@ -80,6 +80,8 @@ function ajax_file_upload(file_obj) {
 		var header_total_max_days = 0;
 		var header_daily_sale = 0;
 		var header_total_gpm = 0;
+        var header_total_gpm = 0;
+        var header_gpm_percent = 0;
 		
         $.ajax({
             type: 'POST',
@@ -162,17 +164,13 @@ function ajax_file_upload(file_obj) {
 						//gpm
 						var gpm = '';
 						gpm = avg_unit_price - productInfo.cost_index / avg_unit_price;
-						gpm = gpm.toFixed(2);
+						gpm = gpm.toFixed(2);					
 						
-						console.log(gpm,'gpm');
 						
-						var gpm_percentage = 0;
-						
+						var gpm_percentage = 0;						
 						if(productInfo.cost_index){
 							gpm_percentage = avg_unit_price / productInfo.cost_index;
 						}
-						
-						console.log(gpm_percentage,'gpm_percentage');
 						
 						if(gpm == 'NaN'){
 							gpm = 0;
@@ -182,11 +180,12 @@ function ajax_file_upload(file_obj) {
 								gpm = gpm_percentage+' ('+gpm_percentage+'%)';
 							}
 						}
+
+                        //condition index
+                        var condition = productInfo.condition_index;
 						
-						console.log($('#header_total_quantity').text(),'mmmmm');
-						console.log(productInfo.quantity_index,'nnnnn');
 						
-						mytable.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, productInfo.msrp_index,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,productInfo.cost_index,productInfo.msrp_index,price,avg_subtotal_price,max_days,'Used',daily_sale,gpm]);
+						mytable.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, productInfo.msrp_index,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,productInfo.cost_index,productInfo.msrp_index,price,avg_subtotal_price,max_days,condition,daily_sale,gpm]);
                         mytable.draw();
 						
 						$('#header_total_quantity').text(parseInt($('#header_total_quantity').text()) + parseInt(productInfo.quantity_index));
@@ -196,7 +195,31 @@ function ajax_file_upload(file_obj) {
 						$('#header_total_msrp').text(parseInt($('#header_total_msrp').text()) + parseInt(total_msrp));
 						
 						$('#header_total_results').text(parseInt($('#header_total_results').text()) + parseInt(productInfo.total_found));
-						
+
+                        $('#header_avg_selling_price').text(parseInt($('#header_avg_selling_price').text()) + parseInt(avg_unit_price));
+
+                        $('#header_lowest_selling_price').text(parseInt($('#header_lowest_selling_price').text()) + parseInt(productInfo.lowest_buy));
+
+                        $('#header_cost').text(parseInt($('#header_cost').text()) + parseInt(productInfo.cost_index));
+
+                        $('#header_avg_sub_price').text(parseInt($('#header_avg_sub_price').text()) + parseInt(avg_subtotal_price));
+
+                        $('#header_total_max_days').text(parseInt($('#header_total_max_days').text()) + parseInt(max_days));
+
+                        $('#header_daily_sale').text(parseInt($('#header_daily_sale').text()) + parseInt(daily_sale));
+
+                        header_total_gpm = $('#header_total_gpm').text();
+                        header_gpm_percent = $('#header_gpm_percent').text();
+
+                        header_total_gpm = parseInt(header_total_gpm) + parseInt(gpm);
+                        header_gpm_percent = parseInt(header_gpm_percent) + parseInt(gpm_percentage);
+
+                        if(header_gpm_percent == 'NaN'){
+                            header_gpm_percent = 0;
+                        }
+
+                        $('#header_total_gpm').text(header_total_gpm);
+                        $('#header_gpm_percent').text('('+header_gpm_percent+' %)');						
                     });
 
                     //$("#popuptableLite tbody").append(tr);

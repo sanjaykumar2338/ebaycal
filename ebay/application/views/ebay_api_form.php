@@ -118,16 +118,16 @@
                      <th id="header_msrp">0</th>
 					 <th id="header_total_msrp">0</th>
 					 <th id="header_total_results">0</th>
-					 <th id="header_avg_selling_price"></th>					
-					 <th id="header_lowest_selling_price"></th>
-					 <th id="header_cost"></th>					 
-					 <th id="header_avg_sub_price"></th>
+					 <th id="header_avg_selling_price">0</th>					
+					 <th id="header_lowest_selling_price">0</th>
+					 <th id="header_cost">0</th>					 
+					 <th id="header_avg_sub_price">0</th>
                      <th></th>
                      <th></th>                                           
-                     <th id="header_total_max_days"></th>
+                     <th id="header_total_max_days">0</th>
 					 <th></th>
-					 <th id="header_daily_sale"></th>
-					 <th id="header_total_gpm"></th>
+					 <th id="header_daily_sale">0</th>
+					 <th><span id="header_total_gpm">0</span>&nbsp;<span id="header_gpm_percent">0</span></th>
                   </tr>
                </thead>
                <tbody>                
