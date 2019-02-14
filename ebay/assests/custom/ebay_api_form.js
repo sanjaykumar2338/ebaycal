@@ -43,10 +43,14 @@ function ajax_file_upload(file_obj) {
 		var keyword_num = '';
 		keyword_num = $('#fewer_words').val();
 		
-
+		var recent_results = $("input[name='recent_results']:checked").val();
+		
+		//alert(recent_results);	
+		
         var form_data = new FormData();
         form_data.append('keyword', file_obj);
 		form_data.append('csv_keywords',keyword_num);
+		form_data.append('recent_results',recent_results);
 
         $('#progress_bar').show();
 		
@@ -171,7 +175,10 @@ function ajax_file_upload(file_obj) {
 						
 						$('#header_total_quantity').text(parseInt($('#header_total_quantity').text()) + parseInt(productInfo.quantity_index));
 						
-						$('#header_msrp').text(parseFloat($('#header_msrp').text()) + parseFloat(productInfo.msrp_index));
+						var header_msrp = parseFloat($('#header_msrp').text()) + parseFloat(productInfo.msrp_index);
+						header_msrp = header_msrp.toFixed(2);
+						
+						$('#header_msrp').text(header_msrp);
 						
 						$('#header_total_msrp').text(parseFloat($('#header_total_msrp').text()) + parseFloat(total_msrp));
 						
@@ -185,12 +192,22 @@ function ajax_file_upload(file_obj) {
 						
 						console.log($('#header_avg_sub_price').text(),'header_avg_sub_price');
 						console.log(avg_subtotal_price,'avg_subtotal_price');
-
-                        $('#header_avg_sub_price').text(parseFloat($('#header_avg_sub_price').text()) + parseFloat(productInfo.msrp_index));
-
-                        $('#header_total_max_days').text(parseFloat($('#header_total_max_days').text()) + parseFloat(max_days));
-
-                        $('#header_daily_sale').text(parseFloat($('#header_daily_sale').text()) + parseFloat(daily_sale));
+						
+						var header_avg_sub_price = parseFloat($('#header_avg_sub_price').text()) + parseFloat(productInfo.msrp_index);
+						var header_avg_sub_price = header_avg_sub_price.toFixed(2);
+						
+                        $('#header_avg_sub_price').text(header_avg_sub_price);
+						
+						var header_total_max_days = parseFloat($('#header_total_max_days').text()) + parseFloat(max_days);
+						
+						header_total_max_days = header_total_max_days.toFixed(2);
+						
+                        $('#header_total_max_days').text(header_total_max_days);
+						
+						var header_daily_sale = parseFloat($('#header_daily_sale').text()) + parseFloat(daily_sale);
+						header_daily_sale = header_daily_sale.toFixed(2);
+						
+                        $('#header_daily_sale').text(header_daily_sale);
 
                         header_total_gpm = $('#header_total_gpm').text();
                         header_gpm_percent = $('#header_gpm_percent').text();
@@ -204,9 +221,11 @@ function ajax_file_upload(file_obj) {
 
                         $('#header_total_gpm').text(header_total_gpm);
                         $('#header_gpm_percent').text('('+header_gpm_percent+' %)');						
+						
+						//calculate filter based values
+						calculate_filter_based_data();
                     });
-
-                    //$("#popuptableLite tbody").append(tr);
+                    
                 } else {
                     alert(obj.msg)
                 }
@@ -217,6 +236,44 @@ function ajax_file_upload(file_obj) {
 			}
         });
     }
+}
+
+function calculate_filter_based_data(){
+	//For true value
+	var header_avg_selling_price = $('#header_avg_selling_price').text();
+	var true_value = $('#true_value').val();
+	
+	var header_avg_selling_price = parseFloat(header_avg_selling_price);
+	var true_value = parseFloat(true_value);	
+	res = header_avg_selling_price * true_value;
+	true_value = res.toFixed(2);
+	
+	$('#true_value_results').val(true_value);
+	
+	
+	//For Shipping value
+	var shipping = $('#shipping').val();
+	var header_total_quantity = $('#header_total_quantity').text();
+	
+	shipping = parseFloat(shipping) * parseFloat(true_value);
+	shipping = parseFloat(shipping) * parseFloat(header_total_quantity);
+	
+	$('#shipping_results').val(shipping);
+	
+	//For fees value
+	var fees = $('#fees').val();
+	fees = parseFloat(fees) * parseFloat(true_value);
+	
+	$('#fees_results').val(fees);
+	
+	//For benefits
+	var benefits = true_value - shipping - fees;
+	$('#benefit_results').val(benefits);
+	
+	//For Offer
+	var offer = $('#offer').val();
+	offer = parseFloat(offer) * parseFloat(benefits);
+	$('#offer_results').val(offer);
 }
 
 function cleardata(){

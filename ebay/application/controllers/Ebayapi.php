@@ -327,6 +327,15 @@ class Ebayapi extends CI_Controller {
 					$main_data[$key]['total_price'] = $total_price;
 					$main_data[$key]['category'] = $category;
 					$main_data[$key]['lowest_buy'] = min($lowest_buy); 
+					
+					$recent_results = $_POST['recent_results'];
+						
+					if($recent_results){
+						if($key==0){
+							break;
+						}	
+					}
+					
 				  }else{
 					  
 					$total_found_val = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0];
@@ -359,8 +368,16 @@ class Ebayapi extends CI_Controller {
 						  }
 						}
 						
-						if($i==3){
-							break;
+						$recent_results = $_POST['recent_results'];
+						
+						if($recent_results){
+							if($i==1){
+								break;
+							}	
+						}else{						
+							if($i==3){
+								break;
+							}
 						}
 					} 
 					  

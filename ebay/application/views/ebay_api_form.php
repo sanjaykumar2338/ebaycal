@@ -100,38 +100,47 @@
                        </div>
                      </div>
 
-                     <div class="form-group ">
-                       <div class="col-lg-12">                            
-                         Recent Results:<label class="checkbox-inline"><input name="recent_results" type="radio" value="1">Yes</label>
-                         <label class="checkbox-inline"><input name="recent_results" type="radio" value="0">No</label>     
-                       </div>
-                     </div>
+                     
 
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">True Value:</label> 
-                         <input type="text" id="true_value" name="true_value" class="form-control " placeholder="True Value">
+                         <input type="text" id="true_value" value="0.75" name="true_value" class="form-control " placeholder="True Value">
                        </div>
                      </div>
 
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Shipping:</label> 
-                         <input type="text" id="shipping" name="shipping" class="form-control " placeholder="Shipping">
+                         <input type="text" id="shipping" value="1" name="shipping" class="form-control " placeholder="Shipping">
                        </div>
                      </div>
-
+					
                       <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Fees:</label> 
-                         <input type="text" id="fees" name="fees" class="form-control " placeholder="Fees">
+                         <input type="text" id="fees" value="1" name="fees" class="form-control " placeholder="Fees">
                        </div>
                      </div>
-
-                     <div class="form-group ">
+					 <br/>	
+                     <div class="form-group">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">GPM:</label> 
                          <input type="text" id="gpm" name="gpm" class="form-control " placeholder="GPM">
+                       </div>
+                     </div>
+					 
+					 <div class="form-group">
+                       <div class="col-lg-12">
+                         <label class="sr-only" for="Offer">Offer:</label> 
+                         <input type="text" id="offer" name="offer" value="0.50" class="form-control " placeholder="Offer">
+                       </div>
+                     </div>
+					 
+					 <div class="form-group ">
+                       <div class="col-lg-12">                            
+                         Recent Results:<label class="checkbox-inline"><input name="recent_results" type="radio" checked value="1">Yes</label>
+                         <label class="checkbox-inline"><input name="recent_results" type="radio" value="0">No</label>     
                        </div>
                      </div>
 
