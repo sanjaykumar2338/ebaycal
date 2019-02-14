@@ -41,7 +41,7 @@ function ajax_file_upload(file_obj) {
         $('#pendingResult').show();
 		
 		var keyword_num = '';
-		keyword_num = $('#words_csv').val();
+		keyword_num = $('#fewer_words').val();
 		
 
         var form_data = new FormData();
@@ -249,7 +249,7 @@ $("#byurl").click(function(e) {
     $('#progress_bar2').show();
 	
 	var keyword_num = '';
-	keyword_num = $('#words_url').val();
+	keyword_num = $('#fewer_words').val();
 	
 	
     $.post('./ebayapi/readdatabyurl', {
