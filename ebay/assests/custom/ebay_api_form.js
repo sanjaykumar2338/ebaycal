@@ -44,6 +44,8 @@ function ajax_file_upload(file_obj) {
 		keyword_num = $('#fewer_words').val();
 		
 		var recent_results = $("input[name='recent_results']:checked").val();
+
+		var condition = $( "#condition" ).val();
 		
 		//alert(recent_results);	
 		
@@ -51,6 +53,7 @@ function ajax_file_upload(file_obj) {
         form_data.append('keyword', file_obj);
 		form_data.append('csv_keywords',keyword_num);
 		form_data.append('recent_results',recent_results);
+		form_data.append('condition',condition);
 
         $('#progress_bar').show();
 		
@@ -116,22 +119,7 @@ function ajax_file_upload(file_obj) {
                         if(productInfo.total_found){
                             max_days = productInfo.total_found / 90;
                             max_days = max_days.toFixed(2);
-                        }
-						
-						//productInfo[0] - refer to category name upload from csv
-						//productInfo[1] - refer to item description
-						//productInfo[2] - refer to quantity uploaded from csv file
-						//productInfo[3] - refer to retail per unit / MSRP
-						//productInfo[4] - refer to total retails
-						//productInfo[5] - refer to condition
-						//productInfo[6] - refer to packing 
-						//productInfo[10] - total result found from the keyword
-						//price  - refer to averarge unit pirce * quantity
-						//productInfo[12] - refer to category from api
-						//avg_unit_price - refer avg_unit_price or avg_selling_pirce is divided by total result found
-						//productInfo[13] - refer to lowest product of price
-						//avg_subtotal_price - refert to above
-						//max_days - refert to divide total found by 90 default
+                        }						
 						
 						/***calculate total msrp ****/
 						var total_msrp = parseInt(productInfo.msrp_index) * parseInt(productInfo.quantity_index);
@@ -173,8 +161,8 @@ function ajax_file_upload(file_obj) {
 						mytable.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, productInfo.msrp_index,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,productInfo.cost_index,productInfo.msrp_index,max_days,condition,daily_sale,gpm]);
                         mytable.draw();
 						
-						$('#header_total_quantity').text(parseInt($('#header_total_quantity').text()) + parseInt(productInfo.quantity_index));
-						
+						$('#header_total_quantity').text(parseInt($('#header_total_quantity').text()) + parseInt(productInfo.quantity_index));						
+
 						var header_msrp = parseFloat($('#header_msrp').text()) + parseFloat(productInfo.msrp_index);
 						header_msrp = header_msrp.toFixed(2);
 						
@@ -194,7 +182,7 @@ function ajax_file_upload(file_obj) {
 						console.log(avg_subtotal_price,'avg_subtotal_price');
 						
 						var header_avg_sub_price = parseFloat($('#header_avg_sub_price').text()) + parseFloat(productInfo.msrp_index);
-						var header_avg_sub_price = header_avg_sub_price.toFixed(2);
+						header_avg_sub_price = header_avg_sub_price.toFixed(2);
 						
                         $('#header_avg_sub_price').text(header_avg_sub_price);
 						
@@ -350,26 +338,10 @@ $("#byurl").click(function(e) {
                         if(productInfo.total_found){
                             max_days = productInfo.total_found / 90;
                             max_days = max_days.toFixed(2);
-                        }
-						
-						//productInfo[0] - refer to category name upload from csv
-						//productInfo[1] - refer to item description
-						//productInfo[2] - refer to quantity uploaded from csv file
-						//productInfo[3] - refer to retail per unit / MSRP
-						//productInfo[4] - refer to total retails
-						//productInfo[5] - refer to condition
-						//productInfo[6] - refer to packing 
-						//productInfo[10] - total result found from the keyword
-						//price  - refer to averarge unit pirce * quantity
-						//productInfo[12] - refer to category from api
-						//avg_unit_price - refer avg_unit_price or avg_selling_pirce is divided by total result found
-						//productInfo[13] - refer to lowest product of price
-						//avg_subtotal_price - refert to above
-						//max_days - refert to divide total found by 90 default
+                        }						
 						
 						/***calculate total msrp ****/
-						var total_msrp = productInfo.msrp_index.replace("$","");
-						total_msrp = parseInt(total_msrp) * parseInt(productInfo.quantity_index);
+						var total_msrp = parseInt(productInfo.msrp_index) * parseInt(productInfo.quantity_index);
 						total_msrp = total_msrp.toFixed(2);
 						
 						if(total_msrp == 'NaN'){
@@ -404,30 +376,45 @@ $("#byurl").click(function(e) {
                         //condition index
                         var condition = productInfo.condition_index;
 						
-						var msrp = productInfo.msrp_index.replace("$","");
 						
-						mytable.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, msrp,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,productInfo.cost_index,msrp,max_days,condition,daily_sale,gpm]);
+						mytable.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, productInfo.msrp_index,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,productInfo.cost_index,productInfo.msrp_index,max_days,condition,daily_sale,gpm]);
                         mytable.draw();
 						
 						$('#header_total_quantity').text(parseInt($('#header_total_quantity').text()) + parseInt(productInfo.quantity_index));
 						
-						$('#header_msrp').text(parseFloat($('#header_msrp').text()) + parseFloat(productInfo.msrp_index));
+						var header_msrp = parseFloat($('#header_msrp').text()) + parseFloat(productInfo.msrp_index);
+						header_msrp = header_msrp.toFixed(2);
+						
+						$('#header_msrp').text(header_msrp);
 						
 						$('#header_total_msrp').text(parseFloat($('#header_total_msrp').text()) + parseFloat(total_msrp));
 						
 						$('#header_total_results').text(parseInt($('#header_total_results').text()) + parseInt(productInfo.total_found));
 
-                        $('#header_avg_selling_price').text(parseFloat($('#header_avg_selling_price').text()) + parseFloat(avg_unit_price));
+                        $('#header_avg_selling_price').text(parseInt($('#header_avg_selling_price').text()) + parseInt(avg_unit_price));
 
                         $('#header_lowest_selling_price').text(parseFloat($('#header_lowest_selling_price').text()) + parseFloat(productInfo.lowest_buy));
 
                         $('#header_cost').text(parseFloat($('#header_cost').text()) + parseFloat(productInfo.cost_index));
-
-                        $('#header_avg_sub_price').text(parseFloat($('#header_avg_sub_price').text()) + parseFloat(avg_subtotal_price));
-
-                        $('#header_total_max_days').text(parseFloat($('#header_total_max_days').text()) + parseFloat(max_days));
-
-                        $('#header_daily_sale').text(parseFloat($('#header_daily_sale').text()) + parseFloat(daily_sale));
+						
+						console.log($('#header_avg_sub_price').text(),'header_avg_sub_price');
+						console.log(avg_subtotal_price,'avg_subtotal_price');
+						
+						var header_avg_sub_price = parseFloat($('#header_avg_sub_price').text()) + parseFloat(productInfo.msrp_index);
+						header_avg_sub_price = header_avg_sub_price.toFixed(2);
+						
+                        $('#header_avg_sub_price').text(header_avg_sub_price);
+						
+						var header_total_max_days = parseFloat($('#header_total_max_days').text()) + parseFloat(max_days);
+						
+						header_total_max_days = header_total_max_days.toFixed(2);
+						
+                        $('#header_total_max_days').text(header_total_max_days);
+						
+						var header_daily_sale = parseFloat($('#header_daily_sale').text()) + parseFloat(daily_sale);
+						header_daily_sale = header_daily_sale.toFixed(2);
+						
+                        $('#header_daily_sale').text(header_daily_sale);
 
                         header_total_gpm = $('#header_total_gpm').text();
                         header_gpm_percent = $('#header_gpm_percent').text();
@@ -441,7 +428,10 @@ $("#byurl").click(function(e) {
 
                         $('#header_total_gpm').text(header_total_gpm);
                         $('#header_gpm_percent').text('('+header_gpm_percent+' %)');						
-                    });           
+						
+						//calculate filter based values
+						calculate_filter_based_data();
+                    });          
         } else {
             alert(obj.msg)
         }

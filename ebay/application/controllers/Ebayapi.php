@@ -270,6 +270,12 @@ class Ebayapi extends CI_Controller {
 		$data_from = date("Y-m-d", $bdate);
 		
 		$url3 = "&itemFilter(2).name=EndTimeFrom&itemFilter(2).value=".$data_from."T00:00:00.000Z&itemFilter(3).name=EndTimeTo&itemFilter(3).value=".$date_to."T00:00:00.000Z";
+
+		$condition = $this->input->post('condition',true);
+
+		if($condition){
+			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value=".$condition;
+		}
 		
 		if(empty($main_data)){
 			$data['status'] = 0;
@@ -295,7 +301,13 @@ class Ebayapi extends CI_Controller {
 			}
 			
 			//$keyword = preg_replace("/[\s_]/", "+", $value[1]);
-			$main = $url1.$keyword.$url2;	
+
+			if($condition){
+				$main = $url1.$keyword.$url2.$url4;	
+			}else{
+				$main = $url1.$keyword.$url2;	
+			}
+
             //echo $main; die;
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $main);	

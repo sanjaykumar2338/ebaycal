@@ -86,9 +86,9 @@
                          <label class="sr-only" for="Condition">Condition:</label> 
                          <select class="form-control" id="condition">
                              <option value="">--Condition--</option>
-                             <option value="New">New</option>
-                             <option value="User">User</option>
-                             <option value="Parts">Parts</option>                             
+                             <option value="1000">New</option>
+                             <option value="3000">Used</option>
+                             <option value="7000">Parts</option>                             
                          </select>                         
                        </div>
                      </div> 
@@ -96,7 +96,7 @@
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Fewer Words:</label> 
-                         <input type="text" id="fewer_words" name="fewer_words" class="form-control " placeholder="Fewer Words">
+                         Fewer Words: <input type="text" id="fewer_words" name="fewer_words" class="form-control " placeholder="Fewer Words">
                        </div>
                      </div>
 
@@ -105,35 +105,35 @@
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">True Value:</label> 
-                         <input type="text" id="true_value" value="0.75" name="true_value" class="form-control " placeholder="True Value">
+                         True Value: <input type="text" id="true_value" value="0.75" name="true_value" class="form-control " placeholder="True Value">
                        </div>
                      </div>
 
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Shipping:</label> 
-                         <input type="text" id="shipping" value="1" name="shipping" class="form-control " placeholder="Shipping">
+                         Shipping: <input type="text" id="shipping" value="1" name="shipping" class="form-control " placeholder="Shipping">
                        </div>
                      </div>
 					
                       <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Fees:</label> 
-                         <input type="text" id="fees" value="1" name="fees" class="form-control " placeholder="Fees">
+                         Fees: <input type="text" id="fees" value="1" name="fees" class="form-control " placeholder="Fees">
                        </div>
                      </div>
 					 <br/>	
                      <div class="form-group">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">GPM:</label> 
-                         <input type="text" id="gpm" name="gpm" class="form-control " placeholder="GPM">
+                         GPM: <input type="text" id="gpm" name="gpm" class="form-control " placeholder="GPM">
                        </div>
                      </div>
 					 
 					 <div class="form-group">
                        <div class="col-lg-12">
                          <label class="sr-only" for="Offer">Offer:</label> 
-                         <input type="text" id="offer" name="offer" value="0.50" class="form-control " placeholder="Offer">
+                         Offer: <input type="text" id="offer" name="offer" value="0.50" class="form-control " placeholder="Offer">
                        </div>
                      </div>
 					 
@@ -166,51 +166,50 @@
                    <div class="form-inline">
                      
                      <div class="form-group ">
-                       <div class="col-lg-12">
-                         <label class="sr-only" for="city">Condition:</label> 
-                         <input type="condition" id="true_value_results" name="true_value_results" class="form-control " placeholder="True Value" >
+                       <div class="col-lg-12">                         
+                         True Value: <input type="condition" id="true_value_results" name="true_value_results" class="form-control " placeholder="True Value" >
                        </div>
                      </div> 
                      
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Shipping:</label> 
-                         <input type="text" id="shipping_results" name="shipping_results" class="form-control " placeholder="Shipping">
+                         Shipping: <input type="text" id="shipping_results" name="shipping_results" class="form-control " placeholder="Shipping">
                        </div>
                      </div>
 
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Fees:</label> 
-                         <input type="text" id="fees_results" name="fees_results" class="form-control " placeholder="Fee">
+                         Fees: <input type="text" id="fees_results" name="fees_results" class="form-control " placeholder="Fee">
                        </div>
                      </div>
 
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Benefit:</label> 
-                         <input type="text" id="benefit_results" name="benefit_results" class="form-control " placeholder="Benefit">
+                         Benefit: <input type="text" id="benefit_results" name="benefit_results" class="form-control " placeholder="Benefit">
                        </div>
                      </div>
 
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">OD:</label> 
-                         <input type="text" id="od_results" name="od_results" class="form-control " placeholder="OD">
+                         OD: <input type="text" id="od_results" name="od_results" class="form-control " placeholder="OD">
                        </div>
                      </div>
 
                       <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Offer:</label> 
-                         <input type="text" id="offer_results" name="offer_results" class="form-control " placeholder="Offer">
+                         Offer: <input type="text" id="offer_results" name="offer_results" class="form-control " placeholder="Offer">
                        </div>
                      </div>
 
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">OD Offer:</label> 
-                         <input type="text" id="od_offer" name="od_offer" class="form-control " placeholder="OD Offer">
+                         OD Offer: <input type="text" id="od_offer" name="od_offer" class="form-control " placeholder="OD Offer">
                        </div>
                      </div>
                    </div>
