@@ -122,14 +122,7 @@
                          Fees: <input type="text" id="fees" value="1" name="fees" class="form-control " placeholder="Fees">
                        </div>
                      </div>
-					 <br/>	
-                     <div class="form-group">
-                       <div class="col-lg-12">
-                         <label class="sr-only" for="county">GPM:</label> 
-                         GPM: <input type="text" id="gpm" name="gpm" class="form-control " placeholder="GPM">
-                       </div>
-                     </div>
-					 
+					 <br/>	                     
 					 <div class="form-group">
                        <div class="col-lg-12">
                          <label class="sr-only" for="Offer">Offer:</label> 
@@ -252,6 +245,7 @@
                            <th>Condition</th>
                            <th>Daiy Sale</th>
                            <th>GPM</th>
+						   <th>Total Price</th>
                         </tr>
                         <tr>
                            <th></th>
@@ -268,6 +262,7 @@
                            <th></th>
                            <th id="header_daily_sale">0</th>
                            <th><span id="header_total_gpm">0</span>&nbsp;<span id="header_gpm_percent">0</span></th>
+						   <th id="header_total_price"></th>
                         </tr>
                      </thead>
                      <tbody>                
