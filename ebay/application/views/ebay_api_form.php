@@ -136,6 +136,14 @@
                          <label class="checkbox-inline"><input name="recent_results" type="radio" value="0">No</label>     
                        </div>
                      </div>
+					 
+					 <div class="form-group">
+                       <div class="col-lg-12">
+                         <label class="sr-only" for="Offer">Category ID:</label> 
+                         Category ID: <input type="text" id="category_id" name="category_id" value="" class="form-control " placeholder="Category ID">
+                       </div>
+                     </div>
+					 
 
                    </div>
                  </div>
@@ -244,8 +252,7 @@
                            <th>Max Days</th>
                            <th>Condition</th>
                            <th>Daiy Sale</th>
-                           <th>GPM</th>
-						   <th>Total Price</th>
+                           <th>GPM</th>						  
                         </tr>
                         <tr>
                            <th></th>
@@ -261,8 +268,7 @@
                            <th id="header_total_max_days">0</th>
                            <th></th>
                            <th id="header_daily_sale">0</th>
-                           <th><span id="header_total_gpm">0</span>&nbsp;<span id="header_gpm_percent">0</span></th>
-						   <th id="header_total_price"></th>
+                           <th><span id="header_total_gpm">0</span>&nbsp;<span id="header_gpm_percent">0</span></th>						   
                         </tr>
                      </thead>
                      <tbody>                

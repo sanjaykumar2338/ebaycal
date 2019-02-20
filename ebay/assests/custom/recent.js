@@ -1,4 +1,4 @@
-var mytable3 = $('#example3').DataTable({
+var mytable2 = $('#example3').DataTable({
     'paging': true,
     'lengthChange': false,
     'searching': true,
@@ -81,22 +81,7 @@ function ajax_file_upload_2(id) {
                         if(productInfo.total_found){
                             max_days = productInfo.total_found / 90;
                             max_days = max_days.toFixed(2);
-                        }
-						
-						//productInfo[0] - refer to category name upload from csv
-						//productInfo[1] - refer to item description
-						//productInfo[2] - refer to quantity uploaded from csv file
-						//productInfo[3] - refer to retail per unit / MSRP
-						//productInfo[4] - refer to total retails
-						//productInfo[5] - refer to condition
-						//productInfo[6] - refer to packing 
-						//productInfo[10] - total result found from the keyword
-						//price  - refer to averarge unit pirce * quantity
-						//productInfo[12] - refer to category from api
-						//avg_unit_price - refer avg_unit_price or avg_selling_pirce is divided by total result found
-						//productInfo[13] - refer to lowest product of price
-						//avg_subtotal_price - refert to above
-						//max_days - refert to divide total found by 90 default
+                        }						
 						
 						/***calculate total msrp ****/
 						var total_msrp = parseInt(productInfo.msrp_index) * parseInt(productInfo.quantity_index);
@@ -134,32 +119,68 @@ function ajax_file_upload_2(id) {
                         //condition index
                         var condition = productInfo.condition_index;
 						
+						var cost_index = 0;
+						if(productInfo.cost_index && productInfo.cost_index != ""){
+							cost_index = productInfo.cost_index;
+						}
 						
-						mytable3.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, productInfo.msrp_index,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,productInfo.cost_index,productInfo.msrp_index,max_days,condition,daily_sale,gpm]);
-                        mytable3.draw();
+						mytable2.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, productInfo.msrp_index,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,cost_index,productInfo.msrp_index,max_days,condition,daily_sale,gpm]);
+                        mytable2.draw();
 						
-						$('#header_total_quantity').text(parseInt($('#header_total_quantity').text()) + parseInt(productInfo.quantity_index));
+						$('#header_total_quantity').text(parseInt($('#header_total_quantity').text()) + parseInt(productInfo.quantity_index));						
+
+						var header_msrp = parseFloat($('#header_msrp').text()) + parseFloat(productInfo.msrp_index);
+						header_msrp = header_msrp.toFixed(2);
 						
-						$('#header_msrp').text(parseFloat($('#header_msrp').text()) + parseFloat(productInfo.msrp_index));
+						$('#header_msrp').text(header_msrp);
 						
-						$('#header_total_msrp').text(parseFloat($('#header_total_msrp').text()) + parseFloat(total_msrp));
+						var header_total_msrp = 0;
+						header_total_msrp = $('#header_total_msrp').text();
+						header_total_msrp = parseFloat(header_total_msrp);
+						header_total_msrp = header_total_msrp + parseFloat(total_msrp);						
+						header_total_msrp = header_total_msrp.toFixed(2);					
+						
+						$('#header_total_msrp').text(header_total_msrp);
 						
 						$('#header_total_results').text(parseInt($('#header_total_results').text()) + parseInt(productInfo.total_found));
-
-                        $('#header_avg_selling_price').text(parseInt($('#header_avg_selling_price').text()) + parseInt(avg_unit_price));
-
-                        $('#header_lowest_selling_price').text(parseFloat($('#header_lowest_selling_price').text()) + parseFloat(productInfo.lowest_buy));
-
-                        $('#header_cost').text(parseFloat($('#header_cost').text()) + parseFloat(productInfo.cost_index));
+						
+						var average_selling_price_raw = parseFloat($('#header_avg_selling_price').text()) + parseFloat(avg_unit_price);
+						average_selling_price_raw = average_selling_price_raw.toFixed(2);
+					
+                        $('#header_avg_selling_price').text(average_selling_price_raw);
+						
+						var lowest_selling_price_raw = parseFloat($('#header_lowest_selling_price').text()) + parseFloat(productInfo.lowest_buy);
+						lowest_selling_price_raw = lowest_selling_price_raw.toFixed(2);
+						
+                        $('#header_lowest_selling_price').text(lowest_selling_price_raw);
+						
+						var header_cost_raw = 0;
+						if(productInfo.cost_index && productInfo.cost_index !=""){
+							header_cost_raw = productInfo.cost_index;
+						}
+						
+						header_cost = parseFloat($('#header_cost').text()) + parseFloat(header_cost_raw);						
+						
+					    $('#header_cost').text(header_cost);
 						
 						console.log($('#header_avg_sub_price').text(),'header_avg_sub_price');
 						console.log(avg_subtotal_price,'avg_subtotal_price');
-
-                        $('#header_avg_sub_price').text(parseFloat($('#header_avg_sub_price').text()) + parseFloat(productInfo.msrp_index));
-
-                        $('#header_total_max_days').text(parseFloat($('#header_total_max_days').text()) + parseFloat(max_days));
-
-                        $('#header_daily_sale').text(parseFloat($('#header_daily_sale').text()) + parseFloat(daily_sale));
+						
+						var header_avg_sub_price = parseFloat($('#header_avg_sub_price').text()) + parseFloat(productInfo.msrp_index);
+						header_avg_sub_price = header_avg_sub_price.toFixed(2);
+						
+                        $('#header_avg_sub_price').text(header_avg_sub_price);
+						
+						var header_total_max_days = parseFloat($('#header_total_max_days').text()) + parseFloat(max_days);
+						
+						header_total_max_days = header_total_max_days.toFixed(2);
+						
+                        $('#header_total_max_days').text(header_total_max_days);
+						
+						var header_daily_sale = parseFloat($('#header_daily_sale').text()) + parseFloat(daily_sale);
+						header_daily_sale = header_daily_sale.toFixed(2);
+						
+                        $('#header_daily_sale').text(header_daily_sale);
 
                         header_total_gpm = $('#header_total_gpm').text();
                         header_gpm_percent = $('#header_gpm_percent').text();
@@ -167,18 +188,87 @@ function ajax_file_upload_2(id) {
                         header_total_gpm = parseFloat(header_total_gpm) + parseFloat(gpm);
                         header_gpm_percent = parseFloat(header_gpm_percent) + parseFloat(gpm_percentage);
 
-                        if(header_gpm_percent == 'NaN'){
+                        if(isNaN(header_gpm_percent)){
                             header_gpm_percent = 0;
                         }
 
                         $('#header_total_gpm').text(header_total_gpm);
                         $('#header_gpm_percent').text('('+header_gpm_percent+' %)');						
+						
+						//calculate filter based values
+						calculate_filter_based_data();
                     });                   
                 } else {
                     alert(obj.msg)
                 }
             }
         });  
+}
+
+function calculate_filter_based_data(){
+	//For true value
+	var header_avg_selling_price = $('#header_avg_selling_price').text();
+	var true_value = $('#true_value').val();
+	var true_value_raw = $('#true_value').val();
+	
+	var header_avg_selling_price = parseFloat(header_avg_selling_price);
+	var true_value = parseFloat(true_value);	
+	res = header_avg_selling_price * true_value;
+	true_value = res.toFixed(2);
+	
+	$('#true_value_results').val(true_value);
+	
+	
+	//For Shipping value
+	var shipping = $('#shipping').val();
+	var header_total_quantity = $('#header_total_quantity').text();
+	
+	shipping = parseFloat(shipping) * parseFloat(true_value);
+	shipping = parseFloat(shipping) * parseFloat(header_total_quantity);
+	
+	$('#shipping_results').val(shipping);
+	
+	//For fees value
+	var fees = $('#fees').val();
+	fees = parseFloat(fees) * parseFloat(true_value);
+	
+	$('#fees_results').val(fees);
+	
+	//For benefits
+	var benefits = true_value - shipping - fees;
+	$('#benefit_results').val(benefits);
+	
+	//For Offer
+	var offer = $('#offer').val();
+	offer = parseFloat(offer) * parseFloat(benefits);
+	$('#offer_results').val(offer);
+	
+	//OD cell
+	var od = 0;
+	$('table').find('tr').each(function (i, el) {		
+        var $tds = $(this).find('td'),
+            msrp = parseFloat($tds.eq(3).text()),
+            avg_selling_price = parseFloat($tds.eq(6).text());
+			total_price = parseFloat($tds.eq(14).text());
+            
+			if (avg_selling_price.toFixed(2) > msrp.toFixed(2)){
+				console.log('yes');
+				od = parseFloat(od) + parseFloat(msrp);
+			}else{
+				console.log('no');
+			}
+			
+		    console.log('msrp', msrp, 'avg_selling_price', avg_selling_price);
+    });
+	
+	od = od.toFixed(2);
+	
+	$('#od_results').val(od);
+	
+	//od offer
+	var od_offer = 0;
+	od_offer = parseFloat(true_value_raw) - parseFloat(od);
+	$('#od_offer').val(od_offer);	
 }
 
 function cleardata(){
@@ -252,26 +342,13 @@ $("#by_url_recent").click(function(e) {
                         if(productInfo.total_found){
                             max_days = productInfo.total_found / 90;
                             max_days = max_days.toFixed(2);
-                        }
-						
-						//productInfo[0] - refer to category name upload from csv
-						//productInfo[1] - refer to item description
-						//productInfo[2] - refer to quantity uploaded from csv file
-						//productInfo[3] - refer to retail per unit / MSRP
-						//productInfo[4] - refer to total retails
-						//productInfo[5] - refer to condition
-						//productInfo[6] - refer to packing 
-						//productInfo[10] - total result found from the keyword
-						//price  - refer to averarge unit pirce * quantity
-						//productInfo[12] - refer to category from api
-						//avg_unit_price - refer avg_unit_price or avg_selling_pirce is divided by total result found
-						//productInfo[13] - refer to lowest product of price
-						//avg_subtotal_price - refert to above
-						//max_days - refert to divide total found by 90 default
+                        }						
 						
 						/***calculate total msrp ****/
-						var total_msrp = productInfo.msrp_index.replace("$","");
-						total_msrp = parseInt(total_msrp) * parseInt(productInfo.quantity_index);
+						var header_msrp_raw = productInfo.msrp_index;
+						header_msrp_raw = header_msrp_raw.replace("$", "");
+						
+						var total_msrp = parseFloat(header_msrp_raw) * parseFloat(productInfo.quantity_index);
 						total_msrp = total_msrp.toFixed(2);
 						
 						if(total_msrp == 'NaN'){
@@ -306,30 +383,98 @@ $("#by_url_recent").click(function(e) {
                         //condition index
                         var condition = productInfo.condition_index;
 						
-						var msrp = productInfo.msrp_index.replace("$","");
+						var cost_index = 0;
+						if(productInfo.cost_index && productInfo.cost_index != ""){
+							cost_index = productInfo.cost_index;
+						}
 						
-						mytable3.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, msrp,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,productInfo.cost_index,msrp,max_days,condition,daily_sale,gpm]);
-                        mytable3.draw();
 						
-						$('#header_total_quantity').text(parseInt($('#header_total_quantity').text()) + parseInt(productInfo.quantity_index));
+						mytable2.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, productInfo.msrp_index,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,cost_index,productInfo.msrp_index,max_days,condition,daily_sale,gpm]);
+                        mytable2.draw();
 						
-						$('#header_msrp').text(parseFloat($('#header_msrp').text()) + parseFloat(productInfo.msrp_index));
+						$('#header_total_quantity').text(parseInt($('#header_total_quantity').text()) + parseInt(productInfo.quantity_index));						
+						
+						var header_msrp_raw = $('#header_msrp').text();
+						header_msrp_raw = header_msrp_raw.replace("$", "");
+						
+						var msrp_index_raw = productInfo.msrp_index;
+						msrp_index_raw = msrp_index_raw.replace("$", "");
+						
+						var header_msrp = parseFloat(header_msrp_raw) + parseFloat(msrp_index_raw);
+						
+						header_msrp = header_msrp.toFixed(2);
+						
+						console.log($('#header_msrp').text(),'$(#header_msrp).text()');
+						console.log(productInfo.msrp_index,'productInfo.msrp_index');
+						
+						console.log(header_msrp, 'header_msrp');
+						
+						$('#header_msrp').text(header_msrp);
 						
 						$('#header_total_msrp').text(parseFloat($('#header_total_msrp').text()) + parseFloat(total_msrp));
 						
-						$('#header_total_results').text(parseInt($('#header_total_results').text()) + parseInt(productInfo.total_found));
+						$('#header_total_results').text(parseFloat(header_msrp_raw) + parseFloat(productInfo.quantity_index));
+						
+						var header_avg_selling_price_raw = $('#header_avg_selling_price').text();
+						header_avg_selling_price_raw = header_avg_selling_price_raw.replace("$", "");
+						
+						console.log(avg_unit_price,'avg_unit_price');
+						
+						var avg_unit_price_raw = 0;
+						if(avg_unit_price != '0'){
+							var avg_unit_price_raw = avg_unit_price;
+							avg_unit_price_raw = avg_unit_price_raw.replace("$", "");
+						}
+						
+						var average_selling_price_raw = parseFloat(header_avg_selling_price_raw) + parseFloat(avg_unit_price_raw);
+						average_selling_price_raw = average_selling_price_raw.toFixed(2);
+						
+                        $('#header_avg_selling_price').text(average_selling_price_raw);
 
-                        $('#header_avg_selling_price').text(parseFloat($('#header_avg_selling_price').text()) + parseFloat(avg_unit_price));
-
-                        $('#header_lowest_selling_price').text(parseFloat($('#header_lowest_selling_price').text()) + parseFloat(productInfo.lowest_buy));
-
-                        $('#header_cost').text(parseFloat($('#header_cost').text()) + parseFloat(productInfo.cost_index));
-
-                        $('#header_avg_sub_price').text(parseFloat($('#header_avg_sub_price').text()) + parseFloat(avg_subtotal_price));
-
-                        $('#header_total_max_days').text(parseFloat($('#header_total_max_days').text()) + parseFloat(max_days));
-
-                        $('#header_daily_sale').text(parseFloat($('#header_daily_sale').text()) + parseFloat(daily_sale));
+						var lowest_selling_price_raw = parseFloat($('#header_lowest_selling_price').text()) + parseFloat(productInfo.lowest_buy);
+						lowest_selling_price_raw = lowest_selling_price_raw.toFixed(2);
+						
+                        $('#header_lowest_selling_price').text(lowest_selling_price_raw);
+						
+						var header_cost_raw = 0;
+						header_cost_raw = $('#header_cost').text();
+						
+						var cost_index_raw = 0;
+						if(productInfo.cost_index &&  productInfo.cost_index!=""){
+							cost_index_raw = productInfo.cost_index;
+						}
+						
+						header_cost = parseFloat(header_cost_raw) + parseFloat(cost_index_raw);						
+						
+					    $('#header_cost').text(header_cost);
+						
+						console.log($('#header_avg_sub_price').text(),'header_avg_sub_price');
+						console.log(avg_subtotal_price,'avg_subtotal_price');
+						
+						var header_avg_sub_price_raw = 0;
+						header_avg_sub_price_raw = $('#header_avg_sub_price').text();
+						header_avg_sub_price_raw = header_avg_sub_price_raw.replace("$", "");
+						
+						var msrp_index_raw = 0;
+						msrp_index_raw = productInfo.msrp_index; 	
+						msrp_index_raw = msrp_index_raw.replace("$", "");
+						
+						var header_avg_sub_price = parseFloat(header_avg_sub_price_raw) + parseFloat(msrp_index_raw);
+						
+						header_avg_sub_price = header_avg_sub_price.toFixed(2);
+						
+                        $('#header_avg_sub_price').text(header_avg_sub_price);
+						
+						var header_total_max_days = parseFloat($('#header_total_max_days').text()) + parseFloat(max_days);
+						
+						header_total_max_days = header_total_max_days.toFixed(2);
+						
+                        $('#header_total_max_days').text(header_total_max_days);
+						
+						var header_daily_sale = parseFloat($('#header_daily_sale').text()) + parseFloat(daily_sale);
+						header_daily_sale = header_daily_sale.toFixed(2);
+						
+                        $('#header_daily_sale').text(header_daily_sale);
 
                         header_total_gpm = $('#header_total_gpm').text();
                         header_gpm_percent = $('#header_gpm_percent').text();
@@ -337,12 +482,17 @@ $("#by_url_recent").click(function(e) {
                         header_total_gpm = parseFloat(header_total_gpm) + parseFloat(gpm);
                         header_gpm_percent = parseFloat(header_gpm_percent) + parseFloat(gpm_percentage);
 
-                        if(header_gpm_percent == 'NaN'){
+                        if(isNaN(header_gpm_percent)){
                             header_gpm_percent = 0;
                         }
+						
+						console.log(header_gpm_percent,'header_gpm_percent');
 
                         $('#header_total_gpm').text(header_total_gpm);
                         $('#header_gpm_percent').text('('+header_gpm_percent+' %)');						
+						
+						//calculate filter based values
+						calculate_filter_based_data();
                     });
 				}
         else {

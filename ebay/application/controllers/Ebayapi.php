@@ -59,7 +59,7 @@ class Ebayapi extends CI_Controller {
 			}
         }
 
-      
+		//print_r($xlsx_data); die;
         //print_r($xlsx_data[0]); die;
         $keyword_val_index = '';
 		$upc_val_index = '';
@@ -259,9 +259,31 @@ class Ebayapi extends CI_Controller {
 			}
 		}
 		
-
-		$url1 = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.7.0&SECURITY-APPNAME=Whatupb15-d225-40c4-a75d-21bb2c690c8&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=&keywords=";
-		$url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US";
+		
+		//print_r($main_data); die;
+		foreach($main_data as $key=>$row){
+			if(empty($row['keyword_index'])){
+				unset($main_data[$key]);
+			}
+		}
+		
+		//$main_data = array_values($main_data);	
+		
+		//echo "<pre>";
+		//print_r($main_data); die;
+		
+		//khawlala-findingu-PRD-bc22b8256-47db3ddd
+		//Whatupb15-d225-40c4-a75d-21bb2c690c8
+	    $category_id = $this->input->post('category_id',true);
+		
+        
+		$url1 = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.7.0&SECURITY-APPNAME=khawlala-findingu-PRD-bc22b8256-47db3ddd&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=&keywords=";
+		
+		if($category_id){
+			$url2 = "&categoryId=$category_id&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US";
+		}else{
+			$url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US";
+		}
 		
 		$date_to = date("Y-m-d");
 		
@@ -274,7 +296,13 @@ class Ebayapi extends CI_Controller {
 		$condition = $this->input->post('condition',true);
 
 		if($condition){
-			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value=".$condition;
+		  if($condition == 1000){	
+			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value(0)=1000&itemFilter(2).value(1)=1500";
+		  }else if($condition == 1000){	
+			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value(0)=2500&itemFilter(2).value(1)=3000";
+		  }else{
+			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value=7000";
+		  }
 		}
 		
 		if(empty($main_data)){
@@ -284,7 +312,9 @@ class Ebayapi extends CI_Controller {
 			exit();
 		}
 		
+		//echo "<pre>>";
 		//print_r($main_data); die;
+		//unset($main_data[0]);
 
 		$pkas =0;	
 		foreach ($main_data as $key=>$value) {			
@@ -307,6 +337,9 @@ class Ebayapi extends CI_Controller {
 			}else{
 				$main = $url1.$keyword.$url2;	
 			}
+			
+			//echo 
+			//echo $main; die;
 
             //echo $main; die;
 			$ch = curl_init();
@@ -668,7 +701,14 @@ class Ebayapi extends CI_Controller {
 			//print_r($main_data); die;			
 
 		$url1 = "http://svcs.ebay.com/services/search/FindingService/v1?OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.7.0&SECURITY-APPNAME=Whatupb15-d225-40c4-a75d-21bb2c690c8&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD=&keywords=";
-		$url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US";
+		
+		$category_id = $this->input->post('category_id',true);
+		
+		if($category_id){
+			$url2 = "&categoryId=$category_id&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US";
+		}else{
+			$url2 = "&itemFilter(0).name=SoldItemsOnly&itemFilter(0).value=true&itemFilter(1).name=GLOBAL-ID&itemFilter(1).value=EBAY-US";
+		}
 		
 		$date_to = date("Y-m-d");
 		
@@ -677,6 +717,18 @@ class Ebayapi extends CI_Controller {
 		$data_from = date("Y-m-d", $bdate);
 		
 		$url3 = "&itemFilter(2).name=EndTimeFrom&itemFilter(2).value=".$data_from."T00:00:00.000Z&itemFilter(3).name=EndTimeTo&itemFilter(3).value=".$date_to."T00:00:00.000Z";
+		
+		$condition = $this->input->post('condition',true);
+
+		if($condition){
+		  if($condition == 1000){	
+			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value(0)=1000&itemFilter(2).value(1)=1500";
+		  }else if($condition == 1000){	
+			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value(0)=2500&itemFilter(2).value(1)=3000";
+		  }else{
+			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value=7000";
+		  }
+		}
 		
 		if(empty($main_data)){
 			$data['status'] = 0;
@@ -702,7 +754,12 @@ class Ebayapi extends CI_Controller {
 			}
 			
 			//$keyword = preg_replace("/[\s_]/", "+", $value[1]);
-			$main = $url1.$keyword.$url2;	
+			if($condition){
+				$main = $url1.$keyword.$url2.$url4;	
+			}else{
+				$main = $url1.$keyword.$url2;	
+			}
+
             //echo $main; die;
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $main);	
@@ -766,8 +823,16 @@ class Ebayapi extends CI_Controller {
 						  }
 						}
 						
-						if($i==3){
-							break;
+						$recent_results = $_POST['recent_results'];
+						
+						if($recent_results){
+							if($i==1){
+								break;
+							}	
+						}else{						
+							if($i==3){
+								break;
+							}
 						}
 					} 
 					  
