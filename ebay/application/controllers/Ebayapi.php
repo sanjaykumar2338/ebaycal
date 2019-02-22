@@ -356,6 +356,12 @@ class Ebayapi extends CI_Controller {
 				  if($total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0] < 100){	 
 					$total_price = 0;
 					$lowest_buy = [];
+
+					$recent_results = $_POST['recent_results'];
+					
+					$start_date = '';
+					$end_date = '';
+
 					foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
 						$total_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 						$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
@@ -373,7 +379,7 @@ class Ebayapi extends CI_Controller {
 					$main_data[$key]['category'] = $category;
 					$main_data[$key]['lowest_buy'] = min($lowest_buy); 
 					
-					$recent_results = $_POST['recent_results'];
+					
 						
 					if($recent_results){
 						if($key==0){
@@ -447,16 +453,59 @@ class Ebayapi extends CI_Controller {
 			//print_r($csv); die;
 		}
 
-			$sv_data['csv'] = $file_name;
-			$sv_data['data'] = serialize($main_data);
+		//echo "<pre>";
+		//print_r($main_data); die;
 
-			$this->db->insert('recent_searches',$sv_data);
+		if(count($main_data)){
+			foreach ($main_data as $key=>$value) {
+				if(!array_key_exists('category', $value)) {
+					$main_data[$key]['category'] = 0;	
+				}	
 
-			$main = [];			
-			$main['data'] = $main_data;
-			$main['status'] = 1;
-			echo json_encode($main);
-			die;
+			    if(empty($value['cost_index'])){		    
+					$main_data[$key]['cost_index'] = 0;				
+				}else{
+					$main_data[$key]['cost_index'] = @str_replace('$', '', $value['cost_index']);				
+				}
+
+				if(empty($value['total_found'])){
+					$main_data[$key]['total_found'] = 0;
+				}
+
+				if(empty($value['total_index'])){
+					$main_data[$key]['total_index'] = 0;
+				}
+
+				if(empty($value['total_price'])){
+					$main_data[$key]['total_price'] = 0;
+				}
+
+				if(empty($value['quantity_index'])){
+					$main_data[$key]['quantity_index'] = 0;
+				}
+
+				if(empty($value['lowest_buy'])){
+					$main_data[$key]['lowest_buy'] = 0;
+				}
+
+				if(empty($value['msrp_index'])){
+					$main_data[$key]['msrp_index'] = 0;
+				}
+			}
+		}	
+
+
+		$sv_data['csv'] = $file_name;
+		$sv_data['data'] = serialize($main_data);
+
+		$this->db->insert('recent_searches',$sv_data);
+
+		$main = [];			
+		$main['data'] = $main_data;
+		$main['status'] = 1;
+		echo json_encode($main);
+		die;
+
 		}
 
 		public function readdatabyurl(){
@@ -855,6 +904,44 @@ class Ebayapi extends CI_Controller {
 					$main_data[$key]['lowest_buy'] = 0;
 			}
 			//print_r($csv); die;
+			}
+
+			if(count($main_data)){
+				foreach ($main_data as $key=>$value) {
+					if(!array_key_exists('category', $value)) {
+						$main_data[$key]['category'] = 0;	
+					}	
+
+				    if(empty($value['cost_index'])){		    
+						$main_data[$key]['cost_index'] = 0;				
+					}else{
+						$main_data[$key]['cost_index'] = @str_replace('$', '', $value['cost_index']);				
+					}
+
+					if(empty($value['total_found'])){
+						$main_data[$key]['total_found'] = 0;
+					}
+
+					if(empty($value['total_index'])){
+						$main_data[$key]['total_index'] = 0;
+					}
+
+					if(empty($value['total_price'])){
+						$main_data[$key]['total_price'] = 0;
+					}
+
+					if(empty($value['quantity_index'])){
+						$main_data[$key]['quantity_index'] = 0;
+					}
+
+					if(empty($value['lowest_buy'])){
+						$main_data[$key]['lowest_buy'] = 0;
+					}
+
+					if(empty($value['msrp_index'])){
+						$main_data[$key]['msrp_index'] = 0;
+						}
+					}
 			}
 
 			$sv_data['url'] = $_POST['url'];

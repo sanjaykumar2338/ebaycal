@@ -135,10 +135,14 @@ function ajax_file_upload(file_obj) {
 						
 						//for gpm
 						var gpm = 0;
-						var cost_value = productInfo.cost_index;
-						cost_value = cost_value.replace('$','');
-						cost_value = parseFloat(cost_value);
+						var cost_value = 0;
+						cost_value = productInfo.cost_index;
 						
+						if(productInfo.cost_index){
+							cost_value = cost_value.replace('$','');
+							cost_value = parseFloat(cost_value);
+						}
+
 						console.log(cost_value,'cost_value');
 						
 						if(cost_value){
@@ -230,18 +234,17 @@ function ajax_file_upload(file_obj) {
                         header_total_gpm = $('#header_total_gpm').text();
                         header_gpm_percent = $('#header_gpm_percent').text();
 
+                        console.log('header_gpm_percent----',header_gpm_percent,'----header_gpm_percent');
+
                         header_total_gpm = parseFloat(header_total_gpm) + parseFloat(gpm);
-                        header_gpm_percent = parseFloat(header_gpm_percent) + parseFloat(gpm_percentage);
-						
-						console.log(header_gpm_percent,'header_gpm_percent')
-						
+                        header_gpm_percent = parseFloat(header_gpm_percent) + gpm_percentage;
 
                         if(isNaN(header_gpm_percent)){
                             header_gpm_percent = 0;
                         }
 
                         $('#header_total_gpm').text(header_total_gpm);
-                        $('#header_gpm_percent').text('('+header_gpm_percent+' %)');						
+                        $('#header_gpm_percent').text(header_gpm_percent);						
 						
 						//calculate filter based values
 						//For true value

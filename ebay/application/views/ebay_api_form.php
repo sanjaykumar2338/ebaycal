@@ -268,7 +268,7 @@
                            <th id="header_total_max_days">0</th>
                            <th></th>
                            <th id="header_daily_sale">0</th>
-                           <th><span id="header_total_gpm">0</span>&nbsp;<span id="header_gpm_percent">0</span></th>						   
+                           <th><span id="header_total_gpm">0</span>&nbsp;(<span id="header_gpm_percent">0</span> %)</th>						   
                         </tr>
                      </thead>
                      <tbody>                
