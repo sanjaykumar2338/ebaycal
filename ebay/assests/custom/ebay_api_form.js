@@ -33,7 +33,8 @@ var mytable = $('#example1').DataTable({
      }, {
       extend: 'csv',
       filename: 'customized_csv_file_name'
-     }]
+     }],
+    'order': [[ 5, "desc" ]]
 });
 
 function ajax_file_upload(file_obj) {
@@ -116,8 +117,22 @@ function ajax_file_upload(file_obj) {
                         //max days 90
                         var max_days = 0;
                         if(productInfo.total_found){
-                            max_days = productInfo.total_found / 90;
-                            max_days = max_days.toFixed(2);
+                        	if(productInfo.recent_results){
+
+                        		var max_days_divide = productInfo.max_days_divide;
+                        		max_days_divide = parseInt(max_days_divide);
+
+                        		if(max_days_divide){
+                        			max_days = productInfo.total_found / max_days_divide;
+                            		max_days = max_days.toFixed(2);
+                            	}else{
+                            		max_days = productInfo.total_found / 90;
+                            		max_days = max_days.toFixed(2);
+                            	}
+                        	}else{
+                            	max_days = productInfo.total_found / 90;
+                            	max_days = max_days.toFixed(2);
+                        	}
                         }						
 						
 						/***calculate total msrp ****/
@@ -499,12 +514,28 @@ $("#byurl").click(function(e) {
                         var avg_subtotal_price = parseFloat(avg_unit_price) * qty
                         avg_subtotal_price = avg_subtotal_price.toFixed(2);
 
-                        //max days 90
+                        //max days 90                        
                         var max_days = 0;
                         if(productInfo.total_found){
-                            max_days = productInfo.total_found / 90;
-                            max_days = max_days.toFixed(2);
-                        }						
+                        	if(productInfo.recent_results){
+
+                        		var max_days_divide = productInfo.max_days_divide;
+                        		max_days_divide = parseInt(max_days_divide);
+
+                        		if(max_days_divide){
+                        			max_days = productInfo.total_found / max_days_divide;
+                            		max_days = max_days.toFixed(2);
+                            	}else{
+                            		max_days = productInfo.total_found / 90;
+                            		max_days = max_days.toFixed(2);
+                            	}
+                        	}else{
+                            	max_days = productInfo.total_found / 90;
+                            	max_days = max_days.toFixed(2);
+                        	}
+                        }
+
+
 						
 						/***calculate total msrp ****/
 						var header_msrp_raw = productInfo.msrp_index;
