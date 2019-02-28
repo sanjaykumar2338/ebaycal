@@ -21,11 +21,11 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form role="form">
+             <form role="form">
                <div class="box-body">
                   <div class="form-group">
                      <label for="exampleInputFile">File input</label>
-                     <input type="file" name="keywords" class="form-control" id="keywords" onchange="upload_file(event)">                  
+                     <input type="file" name="keywords" class="form-control" id="keywords">                  
                   </div>                  
                   <div class="form-group" id="progress_bar" style="display: none;">
                      <img src="<?php echo base_url(); ?>assests/custom/images/loader.gif"  style="width: 74px;">
@@ -34,7 +34,7 @@
                <!-- /.box-body -->
                <div class="box-footer">
                   <span>&nbsp;</span>
-                  <!-- <button type="submit" class="btn btn-primary" style="display: none;">Submit</button> -->
+                  <button type="submit" class="btn btn-primary" id="upload_file">Submit</button>
                </div>
             </form>
          </div>
@@ -119,7 +119,7 @@
                       <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Fees:</label> 
-                         Fees: <input type="text" id="fees" value="1" name="fees" class="form-control " placeholder="Fees">
+                         Fees: <input type="text" id="fees" value="0.10" name="fees" class="form-control " placeholder="Fees">
                        </div>
                      </div>
 					 <br/>	                     
@@ -175,7 +175,7 @@
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Shipping:</label> 
-                         Shipping: <input type="text" id="shipping_results" name="shipping_results" class="form-control " placeholder="Shipping">
+                         Shipping: <input type="text" id="shipping_results" value="1" name="shipping_results" class="form-control " placeholder="Shipping">
                        </div>
                      </div>
 
@@ -252,7 +252,8 @@
                            <th>Max Days</th>
                            <th>Condition</th>
                            <th>Daiy Sale</th>
-                           <th>GPM</th>						  
+                           <th>GPM</th>	
+						   <th>GPM %</th>		
                         </tr>
                         <tr>
                            <th></th>
@@ -268,7 +269,8 @@
                            <th id="header_total_max_days">0</th>
                            <th></th>
                            <th id="header_daily_sale">0</th>
-                           <th><span id="header_total_gpm">0</span>&nbsp;(<span id="header_gpm_percent">0</span> %)</th>						   
+                           <th><span id="header_total_gpm">0</span></th>	
+						   <th><span id="header_gpm_percent">0</span></th>	
                         </tr>
                      </thead>
                      <tbody>                

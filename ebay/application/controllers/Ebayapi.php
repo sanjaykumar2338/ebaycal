@@ -312,12 +312,17 @@ class Ebayapi extends CI_Controller {
 			exit();
 		}
 		
-		//echo "<pre>>";
+		//echo "<pre>";
 		//print_r($main_data); die;
 		//unset($main_data[0]);
 
 		$pkas =0;	
-		foreach ($main_data as $key=>$value) {			
+		foreach ($main_data as $key_main=>$value) {			
+			//print_r($value); die;
+			//if($key_main==0){
+			//	continue;
+			//}
+			
 			if(is_numeric($value['keyword_index'])){				
 				$keyword = $value['keyword_index'];				
 			}else{
@@ -338,8 +343,11 @@ class Ebayapi extends CI_Controller {
 				$main = $url1.$keyword.$url2;	
 			}
 			
-			//echo 
-			//echo $main; die;
+			//echo "<pre>";
+			//echo $main; //die;
+			
+			//continue;
+			//print_r($main_data); die;
 
             //echo $main; die;
 			$ch = curl_init();
@@ -365,7 +373,8 @@ class Ebayapi extends CI_Controller {
 					$total_price = 0;
 					$lowest_buy = [];
 
-					
+				    //echo "here";
+					//die; 
 
 					foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $key=>$row){
 						$total_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
@@ -373,7 +382,7 @@ class Ebayapi extends CI_Controller {
 
 						if($recent_results){
 							if($key==0){
-								$start_date = $row['listingInfo'][0]['startTime'][0];
+								$start_date = $row['listingInfo'][0]['endTime'][0];
 							}							
 							$end_date = $row['listingInfo'][0]['endTime'][0];	
 						}
@@ -392,19 +401,21 @@ class Ebayapi extends CI_Controller {
 					$category = $total['findCompletedItemsResponse'][0]['searchResult'][0]['item'][0]['primaryCategory'][0]['categoryName'][0];
 					$total_found = $total_found_val == 0 ? '0' : $total_found_val;
 					
-					$main_data[$key]['total_found'] = $total_found;
-					$main_data[$key]['total_price'] = $total_price;
-					$main_data[$key]['category'] = $category;
-					$main_data[$key]['lowest_buy'] = min($lowest_buy); 
-					$main_data[$key]['max_days_divide'] = $max_days_divide;
+					$main_data[$key_main]['total_found'] = $total_found;
+					$main_data[$key_main]['total_price'] = $total_price;
+					$main_data[$key_main]['category'] = $category;
+					$main_data[$key_main]['lowest_buy'] = min($lowest_buy); 
+					$main_data[$key_main]['max_days_divide'] = $max_days_divide;
 					
 					
 						
-					if($recent_results){
-						if($key==0){
-							break;
-						}	
-					}
+					//if($recent_results){
+					//	if($key==0){
+					//		break;
+					//	}	
+					//}
+					
+					//print_r($main_data); die;
 					
 				  }else{
 					  
@@ -416,15 +427,20 @@ class Ebayapi extends CI_Controller {
 					$total_main_price = 0;
 					$lowest_buy = [];
 
-					foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
+					foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $key=>$row){
 						$total_main_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 						$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 
 						if($recent_results){
 							if($key==0){
-								$start_date = $row['listingInfo'][0]['startTime'][0];
+								$start_date = $row['listingInfo'][0]['endTime'][0];
 							}							
-							$end_date = $row['listingInfo'][0]['endTime'][0];	
+							$end_date = $row['listingInfo'][0]['endTime'][0];
+							
+							if($key==99){
+								break;
+							}	
+							
 						}
 					}
 
@@ -460,25 +476,27 @@ class Ebayapi extends CI_Controller {
 						} 
 					}
 					  
-					$main_data[$key]['total_found'] = $total_found_val;
-					$main_data[$key]['total_price'] = $total_main_price;
-					$main_data[$key]['category'] = $category; 
-					$main_data[$key]['lowest_buy'] = min($lowest_buy); 
-					$main_data[$key]['max_days_divide'] = $max_days_divide;
+					$main_data[$key_main]['total_found'] = $total_found_val;
+					$main_data[$key_main]['total_price'] = $total_main_price;
+					$main_data[$key_main]['category'] = $category; 
+					$main_data[$key_main]['lowest_buy'] = min($lowest_buy); 
+					$main_data[$key_main]['max_days_divide'] = $max_days_divide;
 
 				  }						
 				}else{
 					
-					$main_data[$key]['total_found'] = 0;
-					$main_data[$key]['total_price'] = 0;
-					$main_data[$key]['category'] = 0;
-					$main_data[$key]['lowest_buy'] = 0;
+					$main_data[$key_main]['total_found'] = 0;
+					$main_data[$key_main]['total_price'] = 0;
+					$main_data[$key_main]['category'] = 0;
+					$main_data[$key_main]['lowest_buy'] = 0;
+					$main_data[$key_main]['max_days_divide'] = 0;
 				}	
 			}else{
-					$main_data[$key]['total_found'] = 0;
-					$main_data[$key]['total_price'] = 0;
-					$main_data[$key]['category'] = 0;
-					$main_data[$key]['lowest_buy'] = 0;
+					$main_data[$key_main]['total_found'] = 0;
+					$main_data[$key_main]['total_price'] = 0;
+					$main_data[$key_main]['category'] = 0;
+					$main_data[$key_main]['lowest_buy'] = 0;
+					$main_data[$key_main]['max_days_divide'] = 0;
 			}
 			//print_r($csv); die;
 		}
@@ -830,7 +848,7 @@ class Ebayapi extends CI_Controller {
 		//print_r($main_data); die;
 
 		$pkas =0;	
-		foreach ($main_data as $key=>$value) {			
+		foreach ($main_data as $key_main=>$value) {			
 			if(is_numeric($value['keyword_index'])){				
 				$keyword = $value['keyword_index'];				
 			}else{
@@ -880,7 +898,7 @@ class Ebayapi extends CI_Controller {
 
 						if($recent_results){
 							if($key==0){
-								$start_date = $row['listingInfo'][0]['startTime'][0];
+								$start_date = $row['listingInfo'][0]['endTime'][0];
 							}							
 							$end_date = $row['listingInfo'][0]['endTime'][0];	
 						}
@@ -899,19 +917,19 @@ class Ebayapi extends CI_Controller {
 					$category = $total['findCompletedItemsResponse'][0]['searchResult'][0]['item'][0]['primaryCategory'][0]['categoryName'][0];
 					$total_found = $total_found_val == 0 ? '0' : $total_found_val;
 					
-					$main_data[$key]['total_found'] = $total_found;
-					$main_data[$key]['total_price'] = $total_price;
-					$main_data[$key]['category'] = $category;
-					$main_data[$key]['lowest_buy'] = min($lowest_buy); 
-					$main_data[$key]['max_days_divide'] = $max_days_divide;
+					$main_data[$key_main]['total_found'] = $total_found;
+					$main_data[$key_main]['total_price'] = $total_price;
+					$main_data[$key_main]['category'] = $category;
+					$main_data[$key_main]['lowest_buy'] = min($lowest_buy); 
+					$main_data[$key_main]['max_days_divide'] = $max_days_divide;
 					
 					
 						
-					if($recent_results){
-						if($key==0){
-							break;
-						}	
-					}
+					//if($recent_results){
+					//	if($key==0){
+					//		break;
+					//	}	
+					//}
 					
 				  }else{
 					  
@@ -923,15 +941,19 @@ class Ebayapi extends CI_Controller {
 					$total_main_price = 0;
 					$lowest_buy = [];
 
-					foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
+					foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $key=>$row){
 						$total_main_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 						$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
 
 						if($recent_results){
 							if($key==0){
-								$start_date = $row['listingInfo'][0]['startTime'][0];
+								$start_date = $row['listingInfo'][0]['endTime'][0];
 							}							
 							$end_date = $row['listingInfo'][0]['endTime'][0];	
+							
+							if($key==99){
+								break;
+							}
 						}
 					}
 
@@ -967,25 +989,25 @@ class Ebayapi extends CI_Controller {
 						} 
 					}
 					  
-					$main_data[$key]['total_found'] = $total_found_val;
-					$main_data[$key]['total_price'] = $total_main_price;
-					$main_data[$key]['category'] = $category; 
-					$main_data[$key]['lowest_buy'] = min($lowest_buy); 
-					$main_data[$key]['max_days_divide'] = $max_days_divide;
+					$main_data[$key_main]['total_found'] = $total_found_val;
+					$main_data[$key_main]['total_price'] = $total_main_price;
+					$main_data[$key_main]['category'] = $category; 
+					$main_data[$key_main]['lowest_buy'] = min($lowest_buy); 
+					$main_data[$key_main]['max_days_divide'] = $max_days_divide;
 
 				  }						
 				}else{
 					
-					$main_data[$key]['total_found'] = 0;
-					$main_data[$key]['total_price'] = 0;
-					$main_data[$key]['category'] = 0;
-					$main_data[$key]['lowest_buy'] = 0;
+					$main_data[$key_main]['total_found'] = 0;
+					$main_data[$key_main]['total_price'] = 0;
+					$main_data[$key_main]['category'] = 0;
+					$main_data[$key_main]['lowest_buy'] = 0;
 				}	
 			}else{
-					$main_data[$key]['total_found'] = 0;
-					$main_data[$key]['total_price'] = 0;
-					$main_data[$key]['category'] = 0;
-					$main_data[$key]['lowest_buy'] = 0;
+					$main_data[$key_main]['total_found'] = 0;
+					$main_data[$key_main]['total_price'] = 0;
+					$main_data[$key_main]['category'] = 0;
+					$main_data[$key_main]['lowest_buy'] = 0;
 			}
 			//print_r($csv); die;
 		}
