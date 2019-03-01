@@ -298,7 +298,7 @@ class Ebayapi extends CI_Controller {
 		if($condition){
 		  if($condition == 1000){	
 			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value(0)=1000&itemFilter(2).value(1)=1500";
-		  }else if($condition == 1000){	
+		  }else if($condition == 3000){	
 			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value(0)=2500&itemFilter(2).value(1)=3000";
 		  }else{
 			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value=7000";
@@ -522,8 +522,13 @@ class Ebayapi extends CI_Controller {
 
 			    if(empty($value['cost_index'])){		    
 					$main_data[$key]['cost_index'] = 0;				
-				}else{
-					$main_data[$key]['cost_index'] = @str_replace('$', '', $value['cost_index']);				
+				}else{				    
+					$cost = @str_replace('$', '', $value['cost_index']);	
+					if(is_numeric($cost)){
+						$main_data[$key]['cost_index'] = $cost;				
+					}else{
+						$main_data[$key]['cost_index'] = 0;				
+					}
 				}
 
 				if(empty($value['total_found'])){
@@ -831,7 +836,7 @@ class Ebayapi extends CI_Controller {
 		if($condition){
 		  if($condition == 1000){	
 			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value(0)=1000&itemFilter(2).value(1)=1500";
-		  }else if($condition == 1000){	
+		  }else if($condition == 3000){	
 			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value(0)=2500&itemFilter(2).value(1)=3000";
 		  }else{
 			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value=7000";
@@ -1034,7 +1039,12 @@ class Ebayapi extends CI_Controller {
 			    if(empty($value['cost_index'])){		    
 					$main_data[$key]['cost_index'] = 0;				
 				}else{
-					$main_data[$key]['cost_index'] = @str_replace('$', '', $value['cost_index']);				
+					$cost = @str_replace('$', '', $value['cost_index']);	
+					if(is_numeric($cost)){
+						$main_data[$key]['cost_index'] = $cost;				
+					}else{
+						$main_data[$key]['cost_index'] = 0;				
+					}			
 				}
 
 				if(empty($value['total_found'])){
