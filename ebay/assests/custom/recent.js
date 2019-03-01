@@ -49,12 +49,12 @@ function ajax_file_upload_2(id) {
                 if (obj.status == 1) {
                     $('#example3').DataTable().clear().draw();
 					cleardata();
-                    console.log(obj.data);
+                    
 					
 					var total_table_row = 1;
 					if(obj.data.length > 0){
 						total_table_row = obj.data.length;
-					}
+					}					
 					
                     $.each(obj.data, function(k, productInfo) {
                         let price = 0;
@@ -219,14 +219,8 @@ function ajax_file_upload_2(id) {
 						
 						header_total_max_days = header_total_max_days.toFixed(2);
 						
-                        $('#header_total_max_days').text(header_total_max_days);
+                        $('#header_total_max_days').text(header_total_max_days);						
 						
-						var header_daily_sale = parseFloat($('#header_daily_sale').text()) + parseFloat(daily_sale);
-						header_daily_sale = header_daily_sale.toFixed(2);
-						header_daily_sale = header_daily_sale / total_table_row;
-						header_daily_sale = header_daily_sale.toFixed(2);
-						
-                        $('#header_daily_sale').text(header_daily_sale);
 
                         header_total_gpm = $('#header_total_gpm').text();
                         header_gpm_percent = $('#header_gpm_percent').text();
@@ -276,8 +270,10 @@ function ajax_file_upload_2(id) {
 						$('#shipping_results').val(shipping);
 						
 						//For fees value
-						var fees = $('#fees').val();
+						var fees = 0;
+						fees = $('#fees').val();
 						fees = parseFloat(fees) * parseFloat(true_value);
+						fees = fees.toFixed(2);
 						
 						$('#fees_results').val(fees);
 						
@@ -294,6 +290,9 @@ function ajax_file_upload_2(id) {
 						var od = 0;
 						var avg_selling_top_header = [];
 						var avg_sub_price_total = [];
+						var gpm_arr = [];
+						var total_daily_sale_data = [];
+
 						$('table').find('tr').each(function (i, el) {	
 							//$(this).css({backgroundColor: 'red'});
 							console.log($(this),'tr');
@@ -304,6 +303,10 @@ function ajax_file_upload_2(id) {
 								total_price = parseFloat($tds.eq(14).text());
 								quantity_index = parseInt($tds.eq(2).text());
 								avg_sub_price = parseInt($tds.eq(9).text());
+								gpm_val = parseFloat($tds.eq(14).text());
+								total_daily_sale_data_val = parseFloat($tds.eq(12).text());
+								
+								console.log(total_daily_sale_data,'total_daily_sale_data----------------');
 								
 								if (avg_selling_price.toFixed(2) > msrp.toFixed(2)){
 									console.log('yes');
@@ -318,12 +321,20 @@ function ajax_file_upload_2(id) {
 									avg_selling_top_header.push(rows_val);
 								}
 								
+								if(!isNaN(gpm_val)){
+									gpm_arr.push(gpm_val);
+								}
+
+								if(!isNaN(total_daily_sale_data_val)){
+									total_daily_sale_data.push(total_daily_sale_data_val);
+								}
+								
 								avg_sub_price_total.push(avg_sub_price);
 								
 								console.log('msrp', msrp, 'avg_selling_price', avg_selling_price);
 						});
 						
-						console.log(avg_selling_top_header,'avg_selling_top_header');
+						console.log(total_daily_sale_data_val,'total_daily_sale_data');
 						
 						var total = 0;
 						for (var i = 0; i < avg_selling_top_header.length; i++) {						  
@@ -343,6 +354,45 @@ function ajax_file_upload_2(id) {
 						total_sub_price = total_sub_price.toFixed(2);
 						
 						$('#true_value_results').val(total_sub_price);
+
+						//For fees value
+						var fees = 0;					
+						fees = $('#fees').val();
+						fees = parseFloat(fees) * parseFloat(total_sub_price);
+						fees = fees.toFixed(2);						
+						$('#fees_results').val(fees);
+						
+						
+						//for gpm
+						var gpm_total = 0;
+						if(gpm_arr.length > 0){						
+							for (var i = 0; i < gpm_arr.length; i++) {						  								
+								gpm_total = gpm_total + parseFloat(gpm_arr[i]);								
+							}
+
+							gpm_total = parseFloat(gpm_total);
+							gpm_total = gpm_total / parseInt(total_table_row);
+							gpm_total = gpm_total.toFixed(2);
+						}	
+
+						$('#header_gpm_percent').text(gpm_total);					
+						
+						//total_daily_api 
+						var total_daily_sale = 0;
+						if(total_daily_sale_data.length > 0){
+							for (var i = 0; i < total_daily_sale_data.length; i++) {						  								
+								total_daily_sale = total_daily_sale + parseFloat(total_daily_sale_data[i]);								
+							}
+
+							total_daily_sale = parseFloat(total_daily_sale);
+							total_daily_sale = total_daily_sale / parseInt(total_table_row);
+							total_daily_sale = total_daily_sale.toFixed(2);
+							
+						}
+
+						$('#header_daily_sale').text(total_daily_sale);
+
+						console.log(total_daily_sale,'total_daily_sale')
 						
 						//for avg sub price total
 						var header_avg_selling_price = $('#header_avg_sub_price').text();
@@ -475,12 +525,12 @@ $("#by_url_recent").click(function(e) {
         if (obj.status == 1) {
                     $('#example3').DataTable().clear().draw();
 					cleardata();
-                    console.log(obj.data);
+                    
 					
 					var total_table_row = 1;
 					if(obj.data.length > 0){
 						total_table_row = obj.data.length;
-					}
+					}					
 					
                     $.each(obj.data, function(k, productInfo) {
                         let price = 0;
@@ -645,14 +695,8 @@ $("#by_url_recent").click(function(e) {
 						
 						header_total_max_days = header_total_max_days.toFixed(2);
 						
-                        $('#header_total_max_days').text(header_total_max_days);
+                        $('#header_total_max_days').text(header_total_max_days);						
 						
-						var header_daily_sale = parseFloat($('#header_daily_sale').text()) + parseFloat(daily_sale);
-						header_daily_sale = header_daily_sale.toFixed(2);
-						header_daily_sale = header_daily_sale / total_table_row;
-						header_daily_sale = header_daily_sale.toFixed(2);
-						
-                        $('#header_daily_sale').text(header_daily_sale);
 
                         header_total_gpm = $('#header_total_gpm').text();
                         header_gpm_percent = $('#header_gpm_percent').text();
@@ -702,8 +746,10 @@ $("#by_url_recent").click(function(e) {
 						$('#shipping_results').val(shipping);
 						
 						//For fees value
-						var fees = $('#fees').val();
+						var fees = 0;
+						fees = $('#fees').val();
 						fees = parseFloat(fees) * parseFloat(true_value);
+						fees = fees.toFixed(2);
 						
 						$('#fees_results').val(fees);
 						
@@ -720,6 +766,9 @@ $("#by_url_recent").click(function(e) {
 						var od = 0;
 						var avg_selling_top_header = [];
 						var avg_sub_price_total = [];
+						var gpm_arr = [];
+						var total_daily_sale_data = [];
+
 						$('table').find('tr').each(function (i, el) {	
 							//$(this).css({backgroundColor: 'red'});
 							console.log($(this),'tr');
@@ -730,6 +779,10 @@ $("#by_url_recent").click(function(e) {
 								total_price = parseFloat($tds.eq(14).text());
 								quantity_index = parseInt($tds.eq(2).text());
 								avg_sub_price = parseInt($tds.eq(9).text());
+								gpm_val = parseFloat($tds.eq(14).text());
+								total_daily_sale_data_val = parseFloat($tds.eq(12).text());
+								
+								console.log(total_daily_sale_data,'total_daily_sale_data----------------');
 								
 								if (avg_selling_price.toFixed(2) > msrp.toFixed(2)){
 									console.log('yes');
@@ -744,12 +797,20 @@ $("#by_url_recent").click(function(e) {
 									avg_selling_top_header.push(rows_val);
 								}
 								
+								if(!isNaN(gpm_val)){
+									gpm_arr.push(gpm_val);
+								}
+
+								if(!isNaN(total_daily_sale_data_val)){
+									total_daily_sale_data.push(total_daily_sale_data_val);
+								}
+								
 								avg_sub_price_total.push(avg_sub_price);
 								
 								console.log('msrp', msrp, 'avg_selling_price', avg_selling_price);
 						});
 						
-						console.log(avg_selling_top_header,'avg_selling_top_header');
+						console.log(total_daily_sale_data_val,'total_daily_sale_data');
 						
 						var total = 0;
 						for (var i = 0; i < avg_selling_top_header.length; i++) {						  
@@ -769,6 +830,45 @@ $("#by_url_recent").click(function(e) {
 						total_sub_price = total_sub_price.toFixed(2);
 						
 						$('#true_value_results').val(total_sub_price);
+
+						//For fees value
+						var fees = 0;					
+						fees = $('#fees').val();
+						fees = parseFloat(fees) * parseFloat(total_sub_price);
+						fees = fees.toFixed(2);						
+						$('#fees_results').val(fees);
+						
+						
+						//for gpm
+						var gpm_total = 0;
+						if(gpm_arr.length > 0){						
+							for (var i = 0; i < gpm_arr.length; i++) {						  								
+								gpm_total = gpm_total + parseFloat(gpm_arr[i]);								
+							}
+
+							gpm_total = parseFloat(gpm_total);
+							gpm_total = gpm_total / parseInt(total_table_row);
+							gpm_total = gpm_total.toFixed(2);
+						}	
+
+						$('#header_gpm_percent').text(gpm_total);					
+						
+						//total_daily_api 
+						var total_daily_sale = 0;
+						if(total_daily_sale_data.length > 0){
+							for (var i = 0; i < total_daily_sale_data.length; i++) {						  								
+								total_daily_sale = total_daily_sale + parseFloat(total_daily_sale_data[i]);								
+							}
+
+							total_daily_sale = parseFloat(total_daily_sale);
+							total_daily_sale = total_daily_sale / parseInt(total_table_row);
+							total_daily_sale = total_daily_sale.toFixed(2);
+							
+						}
+
+						$('#header_daily_sale').text(total_daily_sale);
+
+						console.log(total_daily_sale,'total_daily_sale')
 						
 						//for avg sub price total
 						var header_avg_selling_price = $('#header_avg_sub_price').text();
