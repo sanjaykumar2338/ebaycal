@@ -311,6 +311,7 @@ function ajax_file_upload_2(id) {
 								if (avg_selling_price.toFixed(2) > msrp.toFixed(2)){
 									console.log('yes');
 									od = parseFloat(od) + parseFloat(msrp);
+									$(this).css("background-color", "red");
 								}else{
 									console.log('no');
 								}
@@ -352,8 +353,11 @@ function ajax_file_upload_2(id) {
 						total_sub_price = total_sub_price * true_value_raw;
 						
 						total_sub_price = total_sub_price.toFixed(2);
+						total_sub_price = parseFloat(total_sub_price);
 						
 						$('#true_value_results').val(total_sub_price);
+						
+						
 
 						//For fees value
 						var fees = 0;					
@@ -362,6 +366,18 @@ function ajax_file_upload_2(id) {
 						fees = fees.toFixed(2);						
 						$('#fees_results').val(fees);
 						
+						//For benefits
+						console.log(total_sub_price,'total_sub_price',shipping,'shipping',fees,'fees');
+						
+						var mix_total = parseFloat(fees) + parseFloat(shipping);
+						
+						console.log(mix_total,'mix_total')
+						
+						var benefits = total_sub_price - mix_total;
+						
+						console.log('benefits', benefits);
+						
+						$('#benefit_results').val(benefits);
 						
 						//for gpm
 						var gpm_total = 0;
@@ -786,6 +802,7 @@ $("#by_url_recent").click(function(e) {
 								
 								if (avg_selling_price.toFixed(2) > msrp.toFixed(2)){
 									console.log('yes');
+									$(this).css("background-color", "red");
 									od = parseFloat(od) + parseFloat(msrp);
 								}else{
 									console.log('no');
@@ -828,8 +845,11 @@ $("#by_url_recent").click(function(e) {
 						total_sub_price = total_sub_price * true_value_raw;
 						
 						total_sub_price = total_sub_price.toFixed(2);
+						total_sub_price = parseFloat(total_sub_price);
 						
 						$('#true_value_results').val(total_sub_price);
+						
+						
 
 						//For fees value
 						var fees = 0;					
@@ -838,6 +858,18 @@ $("#by_url_recent").click(function(e) {
 						fees = fees.toFixed(2);						
 						$('#fees_results').val(fees);
 						
+						//For benefits
+						console.log(total_sub_price,'total_sub_price',shipping,'shipping',fees,'fees');
+						
+						var mix_total = parseFloat(fees) + parseFloat(shipping);
+						
+						console.log(mix_total,'mix_total')
+						
+						var benefits = total_sub_price - mix_total;
+						
+						console.log('benefits', benefits);
+						
+						$('#benefit_results').val(benefits);
 						
 						//for gpm
 						var gpm_total = 0;

@@ -110,7 +110,7 @@ class Ebayapi extends CI_Controller {
 				  }
 				}
 				
-				if($row == 'msrp' || $row == 'retail' || $row == 'retail price' || $row == 'retailprice'){				
+				if($row == 'msrp' || $row == 'retail' || $row == 'retail price' || $row == 'retailprice' || $row == 'retail per unit'){				
 					if($row == 'msrp'){
 						$msrp_index = $key;
 					}	
@@ -125,7 +125,11 @@ class Ebayapi extends CI_Controller {
 					
 					if($row == 'retailprice'){
 						$msrp_index = $key;
-					}				  
+					}
+					
+					if($row == 'retail per unit'){
+						$msrp_index = $key;
+					}	
 				}
 				
 				if($row == 'total' || $row == 'extended retailprice' || $row == 'extended retail price' || $row == 'extended retail' || $row == 'total retail price'){				   
@@ -147,7 +151,7 @@ class Ebayapi extends CI_Controller {
 					
 					if($row =='total retail price'){
 						$total_index = $key;
-					}				   
+					}					
 				}
 				
 				if($row == 'cost' || $row == 'price'){
@@ -326,7 +330,9 @@ class Ebayapi extends CI_Controller {
 			if(is_numeric($value['keyword_index'])){				
 				$keyword = $value['keyword_index'];				
 			}else{
-				$total_val = $_POST['csv_keywords'];	
+				//echo "here"; die;
+				$total_val = $_POST['csv_keywords'];
+				//echo $total_val; die;		
 				if($total_val){
 					$keyword = implode(' ', array_slice(explode(' ', $value['keyword_index']), 0, $total_val));
 					$keyword = preg_replace("/[\s_]/", "+", $keyword);
@@ -334,6 +340,8 @@ class Ebayapi extends CI_Controller {
 					$keyword = preg_replace("/[\s_]/", "+", $value['keyword_index']);
 				}				
 			}
+			
+			//echo $keyword; die;
 			
 			//$keyword = preg_replace("/[\s_]/", "+", $value[1]);
 
@@ -344,7 +352,7 @@ class Ebayapi extends CI_Controller {
 			}
 			
 			//echo "<pre>";
-			//echo $main; //die;
+			//echo $main; die;
 			
 			//continue;
 			//print_r($main_data); die;
@@ -675,7 +683,7 @@ class Ebayapi extends CI_Controller {
 				  }
 				}
 				
-				if($row == 'msrp' || $row == 'retail' || $row == 'retail price' || $row == 'retailprice'){				
+				if($row == 'msrp' || $row == 'retail' || $row == 'retail price' || $row == 'retailprice' || $row == 'retail per unit'){				
 					if($row == 'msrp'){
 						$msrp_index = $key;
 					}	
@@ -690,7 +698,11 @@ class Ebayapi extends CI_Controller {
 					
 					if($row == 'retailprice'){
 						$msrp_index = $key;
-					}				  
+					}
+
+					if($row == 'retail per unit'){
+						$msrp_index = $key;
+					}	
 				}
 				
 				if($row == 'total' || $row == 'extended retailprice' || $row == 'extended retail price' || $row == 'extended retail' || $row == 'total retail price'){				   
