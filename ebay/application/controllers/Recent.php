@@ -16,7 +16,8 @@ class Recent extends CI_Controller {
 		if(is_null($this->session->userdata('is_admin')) || empty($this->session->userdata('is_admin'))) {	
 			$this->db->where('user_id',$this->session->userdata('user_id'));
 		}		
-			
+		
+		$this->db->order_by('searched_on','DESC');	
 		$rs = $this->db->get('recent_searches')->result_array();
 		
 		$csv = array();
@@ -48,6 +49,7 @@ class Recent extends CI_Controller {
 
 		$main = [];			
 		$main['data'] = unserialize($rs['data']);
+		$main['filters'] = unserialize($rs['filters']);
 		$main['status'] = 1;
 		echo json_encode($main);
 		die;
@@ -61,6 +63,7 @@ class Recent extends CI_Controller {
 
 		$main = [];
 		$main['data'] = unserialize($rs['data']);
+		$main['filters'] = unserialize($rs['filters']);
 		$main['main_arr_len'] = $rs['total_column'];	
 		$main['status'] = 1;
 

@@ -569,6 +569,7 @@ class Ebayapi extends CI_Controller {
 
 		$sv_data['csv'] = $file_name;
 		$sv_data['data'] = serialize($main_data);
+		$sv_data['filters'] = serialize($_POST);
 
 		$this->db->insert('recent_searches',$sv_data);
 

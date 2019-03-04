@@ -54,7 +54,30 @@ function ajax_file_upload_2(id) {
 					var total_table_row = 1;
 					if(obj.data.length > 0){
 						total_table_row = obj.data.length;
-					}					
+					}	
+
+					//SET FILTER VALUE
+					console.log(obj.filters.category_id,'cate_id');				
+					$('#fewer_words').val(obj.filters.csv_keywords);												
+					$('#category_id').val(obj.filters.category_id);
+					$('#true_value').val(obj.filters.true_value);
+					$('#shipping').val(obj.filters.shipping);
+					$('#fees').val(obj.filters.fees);					
+					$('#offer').val(obj.filters.offer);
+
+					$("#condition").val(obj.filters.condition);		
+
+					console.log(parseInt(obj.filters.recent_results),'ddddd');
+
+					if(parseInt(obj.filters.recent_results) == 1){
+						$('#recent_results_true').attr('checked','checked');
+
+						console.log('here1');
+					}else{
+						$('#recent_results_false').attr('checked','checked');
+
+						console.log('here2');
+					}				
 					
                     $.each(obj.data, function(k, productInfo) {
                         let price = 0;

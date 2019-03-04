@@ -144,8 +144,8 @@
 					 
 					 <div class="form-group ">
                        <div class="col-lg-12">                            
-                         Recent Results:<label class="checkbox-inline"><input name="recent_results" type="radio" checked value="1">Yes</label>
-                         <label class="checkbox-inline"><input name="recent_results" type="radio" value="0">No</label>     
+                         Recent Results:<label class="checkbox-inline"><input name="recent_results" id="recent_results_true" type="radio">Yes</label>
+                         <label class="checkbox-inline"><input name="recent_results" id="recent_results_false" type="radio">No</label>     
                        </div>
                      </div>
 
@@ -172,49 +172,49 @@
                      
                      <div class="form-group ">
                        <div class="col-lg-12">                         
-                         True Value: <input type="condition" id="true_value_results" name="true_value_results" class="form-control " placeholder="True Value" >
+                         True Value: <input type="condition" id="true_value_results" name="true_value_results" class="form-control " placeholder="True Value" readonly>
                        </div>
                      </div> 
                      
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Shipping:</label> 
-                         Shipping: <input type="text" id="shipping_results" name="shipping_results" class="form-control " placeholder="Shipping">
+                         Shipping: <input type="text" id="shipping_results" name="shipping_results" class="form-control " placeholder="Shipping" readonly>
                        </div>
                      </div>
 
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Fees:</label> 
-                         Fees: <input type="text" id="fees_results" name="fees_results" class="form-control " placeholder="Fee">
+                         Fees: <input type="text" id="fees_results" name="fees_results" class="form-control " placeholder="Fee" readonly>
                        </div>
                      </div>
 
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Benefit:</label> 
-                         Benefit: <input type="text" id="benefit_results" name="benefit_results" class="form-control " placeholder="Benefit">
+                         Benefit: <input type="text" id="benefit_results" name="benefit_results" class="form-control " placeholder="Benefit" readonly>
                        </div>
                      </div>
 
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">OD:</label> 
-                         OD: <input type="text" id="od_results" name="od_results" class="form-control " placeholder="OD">
+                         OD: <input type="text" id="od_results" name="od_results" class="form-control " placeholder="OD" readonly>
                        </div>
                      </div>
 
                       <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">Offer:</label> 
-                         Offer: <input type="text" id="offer_results" name="offer_results" class="form-control " placeholder="Offer">
+                         Offer: <input type="text" id="offer_results" name="offer_results" class="form-control " placeholder="Offer" readonly>
                        </div>
                      </div>
 
                      <div class="form-group ">
                        <div class="col-lg-12">
                          <label class="sr-only" for="county">OD Offer:</label> 
-                         OD Offer: <input type="text" id="od_offer" name="od_offer" class="form-control " placeholder="OD Offer">
+                         OD Offer: <input type="text" id="od_offer" name="od_offer" class="form-control " placeholder="OD Offer" readonly>
                        </div>
                      </div>
                    </div>

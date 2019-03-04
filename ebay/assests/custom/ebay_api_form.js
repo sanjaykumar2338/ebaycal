@@ -45,6 +45,10 @@ function ajax_file_upload(file_obj) {
 		var recent_results = $("input[name='recent_results']:checked").val();
 		var condition = $( "#condition" ).val();		
 		var category_id = $('#category_id').val();
+		var true_value = $('#true_value').val();
+		var shipping = $('#shipping').val();
+		var fees = $('#fees').val();
+		var offer = $('#offer').val();
 		
 		//alert(keyword_num);	
 		
@@ -54,6 +58,12 @@ function ajax_file_upload(file_obj) {
 		form_data.append('recent_results',recent_results);
 		form_data.append('condition',condition);
 		form_data.append('category_id',category_id);
+
+		form_data.append('true_value',true_value);
+		form_data.append('shipping',shipping);
+		form_data.append('fees',fees);
+		form_data.append('offer',offer);
+
 
         $('#progress_bar').show();
 		
@@ -90,8 +100,8 @@ function ajax_file_upload(file_obj) {
 					var total_table_row = 1;
 					if(obj.data.length > 0){
 						total_table_row = obj.data.length;
-					}					
-					
+					}
+										
                     $.each(obj.data, function(k, productInfo) {
                         let price = 0;
                         if (productInfo.total_price) {
