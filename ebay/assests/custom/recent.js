@@ -292,11 +292,9 @@ function ajax_file_upload_2(id) {
 						var avg_sub_price_total = [];
 						var gpm_arr = [];
 						var total_daily_sale_data = [];
+						var ods = [];
 
 						$('table').find('tr').each(function (i, el) {	
-							//$(this).css({backgroundColor: 'red'});
-							console.log($(this),'tr');
-							
 							var $tds = $(this).find('td'),
 								msrp = parseFloat($tds.eq(3).text()),
 								avg_selling_price = parseFloat($tds.eq(6).text());
@@ -304,16 +302,23 @@ function ajax_file_upload_2(id) {
 								quantity_index = parseInt($tds.eq(2).text());
 								avg_sub_price = parseInt($tds.eq(9).text());
 								gpm_val = parseFloat($tds.eq(14).text());
-								total_daily_sale_data_val = parseFloat($tds.eq(12).text());
+								total_daily_sale_data_val = parseFloat($tds.eq(12).text());								
+
+								let avg_selling_price_test = avg_selling_price.toFixed(2);
+								let msrp_test = msrp.toFixed(2);
+
+								console.log(avg_selling_price_test,'avg_selling_price_test',msrp_test,'msrp_test');
 								
-								console.log(total_daily_sale_data,'total_daily_sale_data----------------');
-								
-								if (avg_selling_price.toFixed(2) > msrp.toFixed(2)){
-									console.log('yes');
+								if (Math.round(avg_selling_price_test * 100) > Math.round(msrp_test * 100)){
+								//if (avg_selling_price_test > msrp_test){									
+									$(this).css("background-color", "#e07575");
 									od = parseFloat(od) + parseFloat(msrp);
-									$(this).css("background-color", "red");
-								}else{
-									console.log('no');
+
+									//for od change client change
+									let avg_selling_price2 = avg_selling_price.toFixed(2);
+									avg_selling_price2 = avg_selling_price2 * quantity_index;
+									ods.push(avg_selling_price2);
+								}else{									
 								}
 								
 								rows_val = avg_selling_price * quantity_index;
@@ -331,11 +336,14 @@ function ajax_file_upload_2(id) {
 								}
 								
 								avg_sub_price_total.push(avg_sub_price);
-								
-								console.log('msrp', msrp, 'avg_selling_price', avg_selling_price);
 						});
-						
-						console.log(total_daily_sale_data_val,'total_daily_sale_data');
+
+						var ods_total = 0;
+						if(ods.length > 0){	
+							for (var i = 0; i < ods.length; i++) {
+								ods_total = parseFloat(ods_total) + parseFloat(ods[i]);
+							}
+						}
 						
 						var total = 0;
 						for (var i = 0; i < avg_selling_top_header.length; i++) {						  
@@ -421,7 +429,7 @@ function ajax_file_upload_2(id) {
 						
 						od = od.toFixed(2);
 						
-						$('#od_results').val(od);
+						$('#od_results').val(ods_total);
 						
 						//od offer
 						var od_offer = 0;
@@ -784,11 +792,9 @@ $("#by_url_recent").click(function(e) {
 						var avg_sub_price_total = [];
 						var gpm_arr = [];
 						var total_daily_sale_data = [];
+						var ods = [];
 
 						$('table').find('tr').each(function (i, el) {	
-							//$(this).css({backgroundColor: 'red'});
-							console.log($(this),'tr');
-							
 							var $tds = $(this).find('td'),
 								msrp = parseFloat($tds.eq(3).text()),
 								avg_selling_price = parseFloat($tds.eq(6).text());
@@ -796,16 +802,23 @@ $("#by_url_recent").click(function(e) {
 								quantity_index = parseInt($tds.eq(2).text());
 								avg_sub_price = parseInt($tds.eq(9).text());
 								gpm_val = parseFloat($tds.eq(14).text());
-								total_daily_sale_data_val = parseFloat($tds.eq(12).text());
+								total_daily_sale_data_val = parseFloat($tds.eq(12).text());								
+
+								let avg_selling_price_test = avg_selling_price.toFixed(2);
+								let msrp_test = msrp.toFixed(2);
+
+								console.log(avg_selling_price_test,'avg_selling_price_test',msrp_test,'msrp_test');
 								
-								console.log(total_daily_sale_data,'total_daily_sale_data----------------');
-								
-								if (avg_selling_price.toFixed(2) > msrp.toFixed(2)){
-									console.log('yes');
-									$(this).css("background-color", "red");
+								if (Math.round(avg_selling_price_test * 100) > Math.round(msrp_test * 100)){
+								//if (avg_selling_price_test > msrp_test){									
+									$(this).css("background-color", "#e07575");
 									od = parseFloat(od) + parseFloat(msrp);
-								}else{
-									console.log('no');
+
+									//for od change client change
+									let avg_selling_price2 = avg_selling_price.toFixed(2);
+									avg_selling_price2 = avg_selling_price2 * quantity_index;
+									ods.push(avg_selling_price2);
+								}else{									
 								}
 								
 								rows_val = avg_selling_price * quantity_index;
@@ -823,11 +836,14 @@ $("#by_url_recent").click(function(e) {
 								}
 								
 								avg_sub_price_total.push(avg_sub_price);
-								
-								console.log('msrp', msrp, 'avg_selling_price', avg_selling_price);
 						});
-						
-						console.log(total_daily_sale_data_val,'total_daily_sale_data');
+
+						var ods_total = 0;
+						if(ods.length > 0){	
+							for (var i = 0; i < ods.length; i++) {
+								ods_total = parseFloat(ods_total) + parseFloat(ods[i]);
+							}
+						}
 						
 						var total = 0;
 						for (var i = 0; i < avg_selling_top_header.length; i++) {						  
@@ -913,7 +929,7 @@ $("#by_url_recent").click(function(e) {
 						
 						od = od.toFixed(2);
 						
-						$('#od_results').val(od);
+						$('#od_results').val(ods_total);
 						
 						//od offer
 						var od_offer = 0;

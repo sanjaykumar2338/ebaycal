@@ -81,8 +81,6 @@ function ajax_file_upload(file_obj) {
                 $("#keywords").val(null);
                 $('#progress_bar').hide();
                 var obj = JSON.parse(response);
-				
-				console.log('obj', obj);
 
                 if (obj.status == 1) {
                     $('#example1').DataTable().clear().draw();
@@ -166,16 +164,12 @@ function ajax_file_upload(file_obj) {
 						if(productInfo.cost_index){
 							cost_value = cost_value.replace('$','');
 							cost_value = parseFloat(cost_value);
-						}
-
-						console.log(cost_value,'cost_value');
+						}					
 						
 						if(cost_value){
 							gpm = avg_unit_price - cost_value;	
 							gpm = parseFloat(gpm);
-                            gpm = gpm.toFixed(2);	
-
-							console.log(gpm,'gpm',avg_unit_price,'avg_unit_price');	
+                            gpm = gpm.toFixed(2);								
 						}
 						
 						//for gpm percentage
@@ -245,9 +239,6 @@ function ajax_file_upload(file_obj) {
 						
 					    $('#header_cost').text(header_cost.toFixed(2));
 						
-						console.log($('#header_avg_sub_price').text(),'header_avg_sub_price');
-						console.log(avg_subtotal_price,'avg_subtotal_price');
-						
 						var header_avg_sub_price = parseFloat($('#header_avg_sub_price').text()) + parseFloat(productInfo.msrp_index);
 						header_avg_sub_price = header_avg_sub_price.toFixed(2);
 						
@@ -261,9 +252,7 @@ function ajax_file_upload(file_obj) {
 						
 
                         header_total_gpm = $('#header_total_gpm').text();
-                        header_gpm_percent = $('#header_gpm_percent').text();
-
-                        console.log('header_gpm_percent----',header_gpm_percent,'----header_gpm_percent');
+                        header_gpm_percent = $('#header_gpm_percent').text();                        
 
                         header_total_gpm = parseFloat(header_total_gpm) + parseFloat(gpm);
 						header_total_gpm = header_total_gpm.toFixed(2);
@@ -330,11 +319,9 @@ function ajax_file_upload(file_obj) {
 						var avg_sub_price_total = [];
 						var gpm_arr = [];
 						var total_daily_sale_data = [];
+						var ods = [];
 
 						$('table').find('tr').each(function (i, el) {	
-							//$(this).css({backgroundColor: 'red'});
-							console.log($(this),'tr');
-							
 							var $tds = $(this).find('td'),
 								msrp = parseFloat($tds.eq(3).text()),
 								avg_selling_price = parseFloat($tds.eq(6).text());
@@ -342,20 +329,23 @@ function ajax_file_upload(file_obj) {
 								quantity_index = parseInt($tds.eq(2).text());
 								avg_sub_price = parseInt($tds.eq(9).text());
 								gpm_val = parseFloat($tds.eq(14).text());
-								total_daily_sale_data_val = parseFloat($tds.eq(12).text());
+								total_daily_sale_data_val = parseFloat($tds.eq(12).text());								
+
+								let avg_selling_price_test = avg_selling_price.toFixed(2);
+								let msrp_test = msrp.toFixed(2);
+
+								console.log(avg_selling_price_test,'avg_selling_price_test',msrp_test,'msrp_test');
 								
-								//avg_sub_price = avg_sub_price * quantity_index;
-								//console.log(total_daily_sale_data,'total_daily_sale_data----------------');
-								
-								console.log(avg_selling_price,'avg_selling_price',msrp,'msrp');
-								
-								if (avg_selling_price.toFixed(2) > msrp.toFixed(2)){
-									console.log('yes');
-									$(this).css("background-color", "red");
+								if (Math.round(avg_selling_price_test * 100) > Math.round(msrp_test * 100)){
+								//if (avg_selling_price_test > msrp_test){									
+									$(this).css("background-color", "#e07575");
 									od = parseFloat(od) + parseFloat(msrp);
-								}else{
-									//$(this).css("background-color", "red");
-									console.log('no');
+
+									//for od change client change
+									let avg_selling_price2 = avg_selling_price.toFixed(2);
+									avg_selling_price2 = avg_selling_price2 * quantity_index;
+									ods.push(avg_selling_price2);
+								}else{									
 								}
 								
 								rows_val = avg_selling_price * quantity_index;
@@ -373,11 +363,14 @@ function ajax_file_upload(file_obj) {
 								}
 								
 								avg_sub_price_total.push(avg_sub_price);
-								
-								console.log('msrp', msrp, 'avg_selling_price', avg_selling_price);
 						});
-						
-						//console.log(total_daily_sale_data_val,'total_daily_sale_data');
+
+						var ods_total = 0;
+						if(ods.length > 0){	
+							for (var i = 0; i < ods.length; i++) {
+								ods_total = parseFloat(ods_total) + parseFloat(ods[i]);
+							}
+						}					
 						
 						var total = 0;
 						for (var i = 0; i < avg_selling_top_header.length; i++) {						  
@@ -397,8 +390,7 @@ function ajax_file_upload(file_obj) {
 						total_sub_price = total_sub_price.toFixed(2);
 						total_sub_price = parseFloat(total_sub_price);
 						
-						$('#true_value_results').val(total_sub_price);
-						
+						$('#true_value_results').val(total_sub_price);					
 						
 
 						//For fees value
@@ -409,16 +401,8 @@ function ajax_file_upload(file_obj) {
 						$('#fees_results').val(fees);
 						
 						//For benefits
-						console.log(total_sub_price,'total_sub_price',shipping,'shipping',fees,'fees');
-						
-						var mix_total = parseFloat(fees) + parseFloat(shipping);
-						
-						console.log(mix_total,'mix_total')
-						
-						var benefits = total_sub_price - mix_total;
-						
-						console.log('benefits', benefits);
-						
+						var mix_total = parseFloat(fees) + parseFloat(shipping);						
+						var benefits = total_sub_price - mix_total;						
 						$('#benefit_results').val(benefits);
 						
 						//for gpm
@@ -449,21 +433,17 @@ function ajax_file_upload(file_obj) {
 						}
 
 						$('#header_daily_sale').text(total_daily_sale);
-
-						console.log(total_daily_sale,'total_daily_sale')
 						
 						//for avg sub price total
 						var header_avg_selling_price = $('#header_avg_sub_price').text();
 						header_avg_selling_price = parseFloat(header_avg_selling_price) + parseFloat(avg_sub_price);
 						header_avg_selling_price = header_avg_selling_price.toFixed(2);
 						
-						console.log(header_avg_selling_price,'header_avg_selling_price');
-						
 						$('#header_avg_sub_price').text(total_sub_price_raw);
 						
 						od = od.toFixed(2);
 						
-						$('#od_results').val(od);
+						$('#od_results').val(ods_total);
 						
 						//od offer
 						var od_offer = 0;
@@ -611,8 +591,7 @@ $("#byurl").click(function(e) {
         $('#progress_bar2').hide();
             if (obj.status == 1) {
                     $('#example1').DataTable().clear().draw();
-					cleardata();
-                    
+					cleardata();                    
 					
 					var total_table_row = 1;
 					if(obj.data.length > 0){
@@ -692,15 +671,11 @@ $("#byurl").click(function(e) {
 							cost_value = cost_value.replace('$','');
 							cost_value = parseFloat(cost_value);
 						}
-
-						console.log(cost_value,'cost_value');
 						
 						if(cost_value){
 							gpm = avg_unit_price - cost_value;	
 							gpm = parseFloat(gpm);
                             gpm = gpm.toFixed(2);	
-
-							console.log(gpm,'gpm',avg_unit_price,'avg_unit_price');	
 						}
 						
 						//for gpm percentage
@@ -768,10 +743,7 @@ $("#byurl").click(function(e) {
 						
 						header_cost = parseFloat($('#header_cost').text()) + parseFloat(header_cost_raw);						
 						
-					    $('#header_cost').text(header_cost.toFixed(2));
-						
-						console.log($('#header_avg_sub_price').text(),'header_avg_sub_price');
-						console.log(avg_subtotal_price,'avg_subtotal_price');
+					    $('#header_cost').text(header_cost.toFixed(2));					
 						
 						var header_avg_sub_price = parseFloat($('#header_avg_sub_price').text()) + parseFloat(productInfo.msrp_index);
 						header_avg_sub_price = header_avg_sub_price.toFixed(2);
@@ -786,9 +758,7 @@ $("#byurl").click(function(e) {
 						
 
                         header_total_gpm = $('#header_total_gpm').text();
-                        header_gpm_percent = $('#header_gpm_percent').text();
-
-                        console.log('header_gpm_percent----',header_gpm_percent,'----header_gpm_percent');
+                        header_gpm_percent = $('#header_gpm_percent').text();                      
 
                         header_total_gpm = parseFloat(header_total_gpm) + parseFloat(gpm);
 						header_total_gpm = header_total_gpm.toFixed(2);
@@ -855,11 +825,9 @@ $("#byurl").click(function(e) {
 						var avg_sub_price_total = [];
 						var gpm_arr = [];
 						var total_daily_sale_data = [];
+						var ods = [];
 
 						$('table').find('tr').each(function (i, el) {	
-							//$(this).css({backgroundColor: 'red'});
-							console.log($(this),'tr');
-							
 							var $tds = $(this).find('td'),
 								msrp = parseFloat($tds.eq(3).text()),
 								avg_selling_price = parseFloat($tds.eq(6).text());
@@ -867,16 +835,23 @@ $("#byurl").click(function(e) {
 								quantity_index = parseInt($tds.eq(2).text());
 								avg_sub_price = parseInt($tds.eq(9).text());
 								gpm_val = parseFloat($tds.eq(14).text());
-								total_daily_sale_data_val = parseFloat($tds.eq(12).text());
+								total_daily_sale_data_val = parseFloat($tds.eq(12).text());								
+
+								let avg_selling_price_test = avg_selling_price.toFixed(2);
+								let msrp_test = msrp.toFixed(2);
+
+								console.log(avg_selling_price_test,'avg_selling_price_test',msrp_test,'msrp_test');
 								
-								console.log(total_daily_sale_data,'total_daily_sale_data----------------');
-								
-								if (avg_selling_price.toFixed(2) > msrp.toFixed(2)){
-									console.log('yes');
-									$(this).css("background-color", "red");
+								if (Math.round(avg_selling_price_test * 100) > Math.round(msrp_test * 100)){
+								//if (avg_selling_price_test > msrp_test){									
+									$(this).css("background-color", "#e07575");
 									od = parseFloat(od) + parseFloat(msrp);
-								}else{
-									console.log('no');
+
+									//for od change client change
+									let avg_selling_price2 = avg_selling_price.toFixed(2);
+									avg_selling_price2 = avg_selling_price2 * quantity_index;
+									ods.push(avg_selling_price2);
+								}else{									
 								}
 								
 								rows_val = avg_selling_price * quantity_index;
@@ -894,12 +869,15 @@ $("#byurl").click(function(e) {
 								}
 								
 								avg_sub_price_total.push(avg_sub_price);
-								
-								console.log('msrp', msrp, 'avg_selling_price', avg_selling_price);
 						});
-						
-						console.log(total_daily_sale_data_val,'total_daily_sale_data');
-						
+
+						var ods_total = 0;
+						if(ods.length > 0){	
+							for (var i = 0; i < ods.length; i++) {
+								ods_total = parseFloat(ods_total) + parseFloat(ods[i]);
+							}
+						}
+
 						var total = 0;
 						for (var i = 0; i < avg_selling_top_header.length; i++) {						  
 							total += avg_selling_top_header[i] << 0;
@@ -930,15 +908,8 @@ $("#byurl").click(function(e) {
 						$('#fees_results').val(fees);
 						
 						//For benefits
-						console.log(total_sub_price,'total_sub_price',shipping,'shipping',fees,'fees');
-						
 						var mix_total = parseFloat(fees) + parseFloat(shipping);
-						
-						console.log(mix_total,'mix_total')
-						
 						var benefits = total_sub_price - mix_total;
-						
-						console.log('benefits', benefits);
 						
 						$('#benefit_results').val(benefits);
 						
@@ -970,21 +941,16 @@ $("#byurl").click(function(e) {
 						}
 
 						$('#header_daily_sale').text(total_daily_sale);
-
-						console.log(total_daily_sale,'total_daily_sale')
 						
 						//for avg sub price total
 						var header_avg_selling_price = $('#header_avg_sub_price').text();
 						header_avg_selling_price = parseFloat(header_avg_selling_price) + parseFloat(avg_sub_price);
 						header_avg_selling_price = header_avg_selling_price.toFixed(2);
 						
-						console.log(header_avg_selling_price,'header_avg_selling_price');
-						
-						$('#header_avg_sub_price').text(total_sub_price_raw);
-						
+						$('#header_avg_sub_price').text(total_sub_price_raw);						
 						od = od.toFixed(2);
 						
-						$('#od_results').val(od);
+						$('#od_results').val(ods_total);
 						
 						//od offer
 						var od_offer = 0;
