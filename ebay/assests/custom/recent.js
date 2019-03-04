@@ -307,6 +307,7 @@ function ajax_file_upload_2(id) {
 						//For Offer
 						var offer = $('#offer').val();
 						offer = parseFloat(offer) * parseFloat(benefits);
+						offer = offer.toFixed(2);
 						$('#offer_results').val(offer);
 						
 						//OD cell
@@ -457,6 +458,7 @@ function ajax_file_upload_2(id) {
 						//od offer
 						var od_offer = 0;
 						od_offer = parseFloat(true_value_raw) - parseFloat(od);
+						od_offer = od_offer.toFixed(2);
 						$('#od_offer').val(od_offer);
                     });					
 					//calculate_filter_based_data();                    
@@ -465,73 +467,6 @@ function ajax_file_upload_2(id) {
                 }
             }
         });  
-}
-
-function calculate_filter_based_data(){
-	//For true value
-	var header_avg_selling_price = $('#header_avg_selling_price').text();
-	var true_value = $('#true_value').val();
-	var true_value_raw = $('#true_value').val();
-	
-	var header_avg_selling_price = parseFloat(header_avg_selling_price);
-	var true_value = parseFloat(true_value);	
-	res = header_avg_selling_price * true_value;
-	true_value = res.toFixed(2);
-	
-	$('#true_value_results').val(true_value);
-	
-	
-	//For Shipping value
-	var true_value_raw = $('#true_value').val();
-	var shipping = $('#shipping').val();
-	var header_total_quantity = $('#header_total_quantity').text();
-	
-	shipping = parseFloat(shipping) * parseFloat(true_value_raw);
-	shipping = parseFloat(shipping) * parseFloat(header_total_quantity);
-	
-	$('#shipping_results').val(shipping);
-	
-	//For fees value
-	var fees = $('#fees').val();
-	fees = parseFloat(fees) * parseFloat(true_value);
-	
-	$('#fees_results').val(fees);
-	
-	//For benefits
-	var benefits = true_value - shipping - fees;
-	$('#benefit_results').val(benefits);
-	
-	//For Offer
-	var offer = $('#offer').val();
-	offer = parseFloat(offer) * parseFloat(benefits);
-	$('#offer_results').val(offer);
-	
-	//OD cell
-	var od = 0;
-	$('table').find('tr').each(function (i, el) {		
-        var $tds = $(this).find('td'),
-            msrp = parseFloat($tds.eq(3).text()),
-            avg_selling_price = parseFloat($tds.eq(6).text());
-			total_price = parseFloat($tds.eq(14).text());
-            
-			if (avg_selling_price.toFixed(2) > msrp.toFixed(2)){
-				console.log('yes');
-				od = parseFloat(od) + parseFloat(msrp);
-			}else{
-				console.log('no');
-			}
-			
-		    console.log('msrp', msrp, 'avg_selling_price', avg_selling_price);
-    });
-	
-	od = od.toFixed(2);
-	
-	$('#od_results').val(od);
-	
-	//od offer
-	var od_offer = 0;
-	od_offer = parseFloat(true_value_raw) - parseFloat(od);
-	$('#od_offer').val(od_offer);	
 }
 
 function cleardata(){
@@ -578,6 +513,29 @@ $("#by_url_recent").click(function(e) {
 					if(obj.data.length > 0){
 						total_table_row = obj.data.length;
 					}					
+
+					//SET FILTER VALUE
+					console.log(obj.filters.category_id,'cate_id');				
+					$('#fewer_words').val(obj.filters.csv_keywords);												
+					$('#category_id').val(obj.filters.category_id);
+					$('#true_value').val(obj.filters.true_value);
+					$('#shipping').val(obj.filters.shipping);
+					$('#fees').val(obj.filters.fees);					
+					$('#offer').val(obj.filters.offer);
+
+					$("#condition").val(obj.filters.condition);		
+
+					console.log(parseInt(obj.filters.recent_results),'ddddd');
+
+					if(parseInt(obj.filters.recent_results) == 1){
+						$('#recent_results_true').attr('checked','checked');
+
+						console.log('here1');
+					}else{
+						$('#recent_results_false').attr('checked','checked');
+
+						console.log('here2');
+					}
 					
                     $.each(obj.data, function(k, productInfo) {
                         let price = 0;
@@ -807,6 +765,7 @@ $("#by_url_recent").click(function(e) {
 						//For Offer
 						var offer = $('#offer').val();
 						offer = parseFloat(offer) * parseFloat(benefits);
+						offer = offer.toFixed(2);
 						$('#offer_results').val(offer);
 						
 						//OD cell
@@ -957,6 +916,7 @@ $("#by_url_recent").click(function(e) {
 						//od offer
 						var od_offer = 0;
 						od_offer = parseFloat(true_value_raw) - parseFloat(od);
+						od_offer = od_offer.toFixed(2);
 						$('#od_offer').val(od_offer);
                     });					
 					//calculate_filter_based_data();                    

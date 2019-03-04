@@ -101,7 +101,7 @@ function ajax_file_upload(file_obj) {
 					if(obj.data.length > 0){
 						total_table_row = obj.data.length;
 					}
-										
+
                     $.each(obj.data, function(k, productInfo) {
                         let price = 0;
                         if (productInfo.total_price) {
@@ -321,6 +321,7 @@ function ajax_file_upload(file_obj) {
 						//For Offer
 						var offer = $('#offer').val();
 						offer = parseFloat(offer) * parseFloat(benefits);
+						offer = offer.toFixed(2);
 						$('#offer_results').val(offer);
 						
 						//OD cell
@@ -458,6 +459,7 @@ function ajax_file_upload(file_obj) {
 						//od offer
 						var od_offer = 0;
 						od_offer = parseFloat(true_value_raw) - parseFloat(od);
+						od_offer = od_offer.toFixed(2);
 						$('#od_offer').val(od_offer);
                     });					
 					//calculate_filter_based_data();                    
@@ -471,93 +473,6 @@ function ajax_file_upload(file_obj) {
 			}
         });
     }
-}
-
-function calculate_filter_based_data(){
-	
-	
-	//For true value
-	var header_avg_selling_price = $('#header_avg_selling_price').text();
-	var true_value = $('#true_value').val();
-	var true_value_raw = $('#true_value').val();
-	
-	var header_avg_selling_price = parseFloat(header_avg_selling_price);
-	var true_value = parseFloat(true_value);	
-	res = header_avg_selling_price * true_value;
-	true_value = res.toFixed(2);
-	
-	$('#true_value_results').val(true_value);
-	
-	
-	//For Shipping value
-	var shipping = $('#shipping').val();
-	var header_total_quantity = $('#header_total_quantity').text();
-	
-	shipping = parseFloat(shipping) * parseFloat(true_value);
-	shipping = parseFloat(shipping) * parseFloat(header_total_quantity);
-	
-	$('#shipping_results').val(shipping);
-	
-	//For fees value
-	var fees = $('#fees').val();
-	fees = parseFloat(fees) * parseFloat(true_value);
-	
-	$('#fees_results').val(fees);
-	
-	//For benefits
-	var benefits = true_value - shipping - fees;
-	$('#benefit_results').val(benefits);
-	
-	//For Offer
-	var offer = $('#offer').val();
-	offer = parseFloat(offer) * parseFloat(benefits);
-	$('#offer_results').val(offer);
-	
-	//OD cell
-	var od = 0;
-	var avg_selling_top_header = [];
-	$('table').find('tr').each(function (i, el) {	
-		$(this).css({backgroundColor: 'red'});
-		console.log($(this),'tr');
-		
-        var $tds = $(this).find('td'),
-            msrp = parseFloat($tds.eq(3).text()),
-            avg_selling_price = parseFloat($tds.eq(6).text());
-			total_price = parseFloat($tds.eq(14).text());
-            quantity_index = parseInt($tds.eq(2).text());
-			
-			if (avg_selling_price.toFixed(2) > msrp.toFixed(2)){
-				console.log('yes');
-				od = parseFloat(od) + parseFloat(msrp);
-			}else{
-				console.log('no');
-			}
-			
-		    rows_val = avg_selling_price * quantity_index;
-			
-			avg_selling_top_header.push(rows_val);
-			
-		    console.log('msrp', msrp, 'avg_selling_price', avg_selling_price);
-    });
-	
-	console.log(avg_selling_top_header,'avg_selling_top_header');
-	var total = 0;
-	for (var i = 0; i < avg_selling_top_header.length; i++) {
-		total += avg_selling_top_header[i] << 0;
-	}
-	
-	
-	
-	$('#header_avg_selling_price').text(total);
-	
-	od = od.toFixed(2);
-	
-	$('#od_results').val(od);
-	
-	//od offer
-	var od_offer = 0;
-	od_offer = parseFloat(true_value_raw) - parseFloat(od);
-	$('#od_offer').val(od_offer);	
 }
 
 function cleardata(){
@@ -592,10 +507,14 @@ $("#byurl").click(function(e) {
 	var keyword_num = $('#fewer_words').val();
 	var category_id = $('#category_id').val();		
 	var recent_results = $("input[name='recent_results']:checked").val();
-	var condition = $( "#condition" ).val();		
-		
+	var condition = $( "#condition" ).val();
+	var true_value = $('#true_value').val();
+	var shipping = $('#shipping').val();
+	var fees = $('#fees').val();
+	var offer = $('#offer').val();
+			
     $.post('./ebayapi/readdatabyurl', {
-        url: $("#url").val(),keyword_num: keyword_num,category_id: category_id,recent_results:recent_results,condition:condition
+        url: $("#url").val(),keyword_num: keyword_num,category_id: category_id,recent_results:recent_results,condition:condition,true_value:true_value,shipping:shipping,fees:fees,offer:offer
     }).done(function(data){
         var obj = JSON.parse(data);
         $('#progress_bar2').hide();
@@ -827,6 +746,7 @@ $("#byurl").click(function(e) {
 						//For Offer
 						var offer = $('#offer').val();
 						offer = parseFloat(offer) * parseFloat(benefits);
+						offer = offer.toFixed(2);
 						$('#offer_results').val(offer);
 						
 						//OD cell
@@ -965,6 +885,7 @@ $("#byurl").click(function(e) {
 						//od offer
 						var od_offer = 0;
 						od_offer = parseFloat(true_value_raw) - parseFloat(od);
+						od_offer = od_offer.toFixed(2);
 						$('#od_offer').val(od_offer);
                     });					
 					//calculate_filter_based_data();                    
