@@ -349,13 +349,16 @@ function ajax_file_upload(file_obj) {
 								
 								if (Math.round(avg_selling_price_test * 100) > Math.round(msrp_test * 100)){
 								//if (avg_selling_price_test > msrp_test){									
-									$(this).css("background-color", "#e07575");
+									
 									od = parseFloat(od) + parseFloat(msrp);
 
 									//for od change client change
-									let avg_selling_price2 = avg_selling_price.toFixed(2);
-									avg_selling_price2 = avg_selling_price2 * quantity_index;
-									ods.push(avg_selling_price2);
+									if(msrp != 0){
+										$(this).css("background-color", "#e07575");
+										let avg_selling_price2 = avg_selling_price.toFixed(2);
+										avg_selling_price2 = avg_selling_price2 * quantity_index;
+										ods.push(avg_selling_price2);
+									}
 								}else{									
 								}
 								
@@ -774,13 +777,16 @@ $("#byurl").click(function(e) {
 								
 								if (Math.round(avg_selling_price_test * 100) > Math.round(msrp_test * 100)){
 								//if (avg_selling_price_test > msrp_test){									
-									$(this).css("background-color", "#e07575");
+									
 									od = parseFloat(od) + parseFloat(msrp);
 
 									//for od change client change
-									let avg_selling_price2 = avg_selling_price.toFixed(2);
-									avg_selling_price2 = avg_selling_price2 * quantity_index;
-									ods.push(avg_selling_price2);
+									if(msrp != 0){
+										$(this).css("background-color", "#e07575");
+										let avg_selling_price2 = avg_selling_price.toFixed(2);
+										avg_selling_price2 = avg_selling_price2 * quantity_index;
+										ods.push(avg_selling_price2);
+									}
 								}else{									
 								}
 								

@@ -57,7 +57,7 @@ function ajax_file_upload_2(id) {
 					}	
 
 					//SET FILTER VALUE
-					console.log(obj.filters.category_id,'cate_id');				
+					//console.log(obj.filters.category_id,'cate_id');				
 					$('#fewer_words').val(obj.filters.csv_keywords);												
 					$('#category_id').val(obj.filters.category_id);
 					$('#true_value').val(obj.filters.true_value);
@@ -335,13 +335,16 @@ function ajax_file_upload_2(id) {
 								
 								if (Math.round(avg_selling_price_test * 100) > Math.round(msrp_test * 100)){
 								//if (avg_selling_price_test > msrp_test){									
-									$(this).css("background-color", "#e07575");
+									
 									od = parseFloat(od) + parseFloat(msrp);
 
 									//for od change client change
-									let avg_selling_price2 = avg_selling_price.toFixed(2);
-									avg_selling_price2 = avg_selling_price2 * quantity_index;
-									ods.push(avg_selling_price2);
+									if(msrp != 0){
+										$(this).css("background-color", "#e07575");
+										let avg_selling_price2 = avg_selling_price.toFixed(2);
+										avg_selling_price2 = avg_selling_price2 * quantity_index;
+										ods.push(avg_selling_price2);
+									}
 								}else{									
 								}
 								
@@ -515,7 +518,7 @@ $("#by_url_recent").click(function(e) {
 					}					
 
 					//SET FILTER VALUE
-					console.log(obj.filters.category_id,'cate_id');				
+					//console.log(obj.filters.category_id,'cate_id');				
 					$('#fewer_words').val(obj.filters.csv_keywords);												
 					$('#category_id').val(obj.filters.category_id);
 					$('#true_value').val(obj.filters.true_value);
@@ -793,13 +796,16 @@ $("#by_url_recent").click(function(e) {
 								
 								if (Math.round(avg_selling_price_test * 100) > Math.round(msrp_test * 100)){
 								//if (avg_selling_price_test > msrp_test){									
-									$(this).css("background-color", "#e07575");
+									
 									od = parseFloat(od) + parseFloat(msrp);
 
 									//for od change client change
-									let avg_selling_price2 = avg_selling_price.toFixed(2);
-									avg_selling_price2 = avg_selling_price2 * quantity_index;
-									ods.push(avg_selling_price2);
+									if(msrp != 0){
+										$(this).css("background-color", "#e07575");
+										let avg_selling_price2 = avg_selling_price.toFixed(2);
+										avg_selling_price2 = avg_selling_price2 * quantity_index;
+										ods.push(avg_selling_price2);
+									}
 								}else{									
 								}
 								

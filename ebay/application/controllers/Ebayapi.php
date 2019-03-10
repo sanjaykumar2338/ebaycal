@@ -316,6 +316,7 @@ class Ebayapi extends CI_Controller {
 			exit();
 		}
 		
+		//echo "done"; die;
 		//echo "<pre>";
 		//print_r($main_data); die;
 		//unset($main_data[0]);
@@ -1088,6 +1089,8 @@ class Ebayapi extends CI_Controller {
 
 			$sv_data['url'] = $_POST['url'];
 			$sv_data['data'] = serialize($main_data);
+			$sv_data['filters'] = serialize($_POST);
+
 
 			$this->db->insert('recent_searches',$sv_data);
 
