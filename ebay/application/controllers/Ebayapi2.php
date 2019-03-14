@@ -315,6 +315,204 @@ class Ebayapi2 extends CI_Controller {
 			$url4 = "&itemFilter(2).name=Condition&itemFilter(2).value=7000";
 		  }
 		}
+		
+		//print_r($_POST); die;
+		
+		$main_data = $_POST['main_data'];
+		
+		//print_r($value); die;
+			//if($key_main==0){
+			//	continue;
+			//}
+			
+			if(is_numeric($main_data['keyword_index'])){				
+				$keyword = $main_data['keyword_index'];				
+			}else{
+				//echo "here"; die;
+				$total_val = $_POST['csv_keywords'];
+				//echo $total_val; die;		
+				if($total_val){
+					$keyword = implode(' ', array_slice(explode(' ', $main_data['keyword_index']), 0, $total_val));
+					$keyword = preg_replace("/[\s_]/", "+", $keyword);
+				}else{	 
+					$keyword = preg_replace("/[\s_]/", "+", $main_data['keyword_index']);
+				}				
+			}
+			
+			//echo $keyword; die;
+			
+			//$keyword = preg_replace("/[\s_]/", "+", $value[1]);
+
+			if($condition){
+				$main = $url1.$keyword.$url2.$url4;	
+			}else{
+				$main = $url1.$keyword.$url2;	
+			}
+			
+			//echo "<pre>";
+			//echo $main; die;
+			
+			//continue;
+			//print_r($main_data); die;
+
+            //echo $main; die;
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $main);	
+			curl_setopt($ch, CURLOPT_HEADER, 0);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			$edata = curl_exec($ch);
+
+			$total = json_decode($edata, true);
+
+			//print_r($total); die;
+
+			$recent_results = $_POST['recent_results'];
+
+			$start_date = '';
+			$end_date = '';
+			$max_days_divide = '';
+			
+			if(isset($total['findCompletedItemsResponse']) && $total['findCompletedItemsResponse'][0]['ack'][0] == 'Success'){
+				if($total['findCompletedItemsResponse'][0]['searchResult'][0]['@count'] > 0){
+					
+				  if($total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0] < 100){	 
+					$total_price = 0;
+					$lowest_buy = [];
+
+				    //echo "here";
+					//die; 
+
+					foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $key=>$row){
+						$total_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+						$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+
+						if($recent_results){
+							if($key==0){
+								$start_date = $row['listingInfo'][0]['endTime'][0];
+							}							
+							$end_date = $row['listingInfo'][0]['endTime'][0];	
+						}
+					}
+
+					if($recent_results){
+						$now = strtotime($start_date);
+						$your_date = strtotime($end_date);
+						$datediff = $now - $your_date;
+						$max_days_divide = round($datediff / (60 * 60 * 24));
+					}
+					
+					
+					$total_found_val = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0];
+					
+					$category = $total['findCompletedItemsResponse'][0]['searchResult'][0]['item'][0]['primaryCategory'][0]['categoryName'][0];
+					$total_found = $total_found_val == 0 ? '0' : $total_found_val;
+					
+					$main_data['total_found'] = $total_found;
+					$main_data['total_price'] = $total_price;
+					$main_data['category'] = $category;
+					$main_data['lowest_buy'] = min($lowest_buy); 
+					$main_data['max_days_divide'] = $max_days_divide;
+					
+					
+						
+					//if($recent_results){
+					//	if($key==0){
+					//		break;
+					//	}	
+					//}
+					
+					//print_r($main_data); die;
+					
+				  }else{
+					  
+					$total_found_val = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalEntries'][0];
+					$category = $total['findCompletedItemsResponse'][0]['searchResult'][0]['item'][0]['primaryCategory'][0]['categoryName'][0];
+					$total_pages = $total['findCompletedItemsResponse'][0]['paginationOutput'][0]['totalPages'][0];  
+					
+					
+					$total_main_price = 0;
+					$lowest_buy = [];
+
+					foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $key=>$row){
+						$total_main_price += $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+						$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+
+						if($recent_results){
+							if($key==0){
+								$start_date = $row['listingInfo'][0]['endTime'][0];
+							}							
+							$end_date = $row['listingInfo'][0]['endTime'][0];
+							
+							if($key==99){
+								break;
+							}	
+							
+						}
+					}
+
+					if($recent_results){
+						$now = strtotime($start_date);
+						$your_date = strtotime($end_date);
+						$datediff = $now - $your_date;
+						$max_days_divide = round($datediff / (60 * 60 * 24));
+					}
+					
+					
+					if(!$recent_results){
+						for($i=2;$i<=$total_pages;$i++){
+							$main = $main.'&paginationInput.pageNumber='.$i;
+							$ch = curl_init();
+							curl_setopt($ch, CURLOPT_URL, $main);	
+							curl_setopt($ch, CURLOPT_HEADER, 0);
+							curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+							$edata = curl_exec($ch);
+
+							$total = json_decode($edata, true);
+							
+							if(isset($total['findCompletedItemsResponse'][0]['searchResult'])){
+							  foreach($total['findCompletedItemsResponse'][0]['searchResult'][0]['item'] as $row){
+								$total_main_price += (int) $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+								$lowest_buy[] = $row['sellingStatus'][0]['currentPrice'][0]['__value__'];
+							  }
+							}							
+													
+							if($i==3){
+								break;
+							}							
+						} 
+					}
+					  
+					$main_data['total_found'] = $total_found_val;
+					$main_data['total_price'] = $total_main_price;
+					$main_data['category'] = $category; 
+					$main_data['lowest_buy'] = min($lowest_buy); 
+					$main_data['max_days_divide'] = $max_days_divide;
+
+				  }						
+				}else{
+					
+					$main_data['total_found'] = 0;
+					$main_data['total_price'] = 0;
+					$main_data['category'] = 0;
+					$main_data['lowest_buy'] = 0;
+					$main_data['max_days_divide'] = 0;
+				}	
+			}else{
+					$main_data['total_found'] = 0;
+					$main_data['total_price'] = 0;
+					$main_data['category'] = 0;
+					$main_data['lowest_buy'] = 0;
+					$main_data['max_days_divide'] = 0;
+			}
+			
+			//print_r($main_data); die;
+			
+			$main = [];			
+			$main['data'] = $main_data;
+			$main['status'] = 1;
+			echo json_encode($main);
+			die;
+
 	}
 	
 	public function readdata(){	

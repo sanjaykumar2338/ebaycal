@@ -103,14 +103,117 @@ function ajax_file_upload(file_obj) {
 					}
 
                     $.each(obj.data, function(k, productInfo) {                       
-						console.log('productInfo', productInfo);
+						//console.log('productInfo', productInfo);
 						
-						$.post('ebayapi2/readdata2',{data:productInfo[0]},function(data){
-							console.log(data,'data')
+						$.post('ebayapi2/readdata2',{main_data:productInfo[0],csv_keywords:keyword_num,recent_results:recent_results,condition:condition,category_id:category_id,true_value:true_value,shipping:shipping,fees:fees,offer:offer},function(productInfo){
+						
+						let price = 0;
+                        if (productInfo.total_price) {
+                            price = productInfo.total_price.toFixed(2);
+                        }
+
+                        //For avg unit price
+                        var avg_unit_price = 0;                        
+                        if(productInfo.total_price){                           
+                            avg_unit_price = productInfo.total_price;                            
+                            if(productInfo.total_found){
+                                var total_found = parseInt(productInfo.total_found);
+                                var total_price = parseFloat(productInfo.total_price);
+
+                                avg_unit_price = total_price / total_found;
+
+                                avg_unit_price = avg_unit_price.toFixed(2);
+                            }
+                        }
+
+                        //For avg subtotal price 
+                        var qty = parseInt(productInfo.quantity_index);
+                        var avg_subtotal_price = parseFloat(avg_unit_price) * qty
+                        avg_subtotal_price = avg_subtotal_price.toFixed(2);
+
+						//daily sale
+						var daily_sale = 0;
+						if(productInfo.total_found){
+							if(productInfo.recent_results){
+							  if(productInfo.max_days_divide !=0){	
+								daily_sale = parseInt(productInfo.total_found) / parseInt(productInfo.max_days_divide);
+								daily_sale = daily_sale.toFixed(2);
+							  }else{
+								daily_sale = parseInt(productInfo.total_found) / 1;
+								daily_sale = daily_sale.toFixed(2);  
+							  }	
+							}else{
+								daily_sale = parseInt(productInfo.total_found) / 90;
+								daily_sale = daily_sale.toFixed(2);
+							}
+						}
+
+                        //max days 90                        
+                        var max_days = 0;
+						if(daily_sale){
+							if(productInfo.quantity_index){
+								if(productInfo.recent_results){
+									max_days = productInfo.quantity_index / daily_sale;
+									max_days = max_days.toFixed(2);                            	
+								}else{
+									max_days = productInfo.quantity_index / 90;
+									max_days = max_days.toFixed(2);
+								}
+							}				
+						}	
+						
+						/***calculate total msrp ****/
+						var total_msrp = parseInt(productInfo.msrp_index) * parseInt(productInfo.quantity_index);
+						total_msrp = total_msrp.toFixed(2);
+						
+						if(total_msrp == 'NaN'){
+							total_msrp = '';
+						}						
+						
+						//for gpm
+						var gpm = 0;
+						var cost_value = 0;
+						cost_value = productInfo.cost_index;
+						
+						if(productInfo.cost_index){
+							cost_value = cost_value.replace('$','');
+							cost_value = parseFloat(cost_value);
+						}					
+						
+						if(cost_value){
+							gpm = avg_unit_price - cost_value;	
+							gpm = parseFloat(gpm);
+                            gpm = gpm.toFixed(2);								
+						}
+						
+						//for gpm percentage
+						var gpm_percentage = 0;
+						if(gpm && avg_unit_price !=0){
+							gpm_percentage = gpm / avg_unit_price;
+							gpm_percentage = parseFloat(gpm_percentage);
+							gpm_percentage = gpm_percentage.toFixed(2);
+						}					
+						
+                        //condition index
+                        var condition = productInfo.condition_index;
+						
+						var cost_index = 0;
+						if(productInfo.cost_index && productInfo.cost_index != ""){
+							cost_index = productInfo.cost_index;
 							
-							mytable.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, productInfo.msrp_index,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,cost_index,avg_sub_price,max_days,condition,daily_sale,gpm,gpm_percentage]);
-							
-							mytable.draw();													
+							/*if(productInfo.quantity_index && productInfo.quantity_index !=""){
+								cost_index = cost_index * parseFloat(productInfo.quantity_index);
+							}*/
+						}
+						
+						//avg sub price
+						var avg_sub_price = 0;
+						avg_sub_price = avg_unit_price * parseInt(productInfo.quantity_index);
+						avg_sub_price = avg_sub_price.toFixed(2);
+						
+						mytable.row.add([productInfo.keyword_index, productInfo.category, productInfo.quantity_index, productInfo.msrp_index,total_msrp,productInfo.total_found,avg_unit_price,productInfo.lowest_buy,cost_index,avg_sub_price,max_days,condition,daily_sale,gpm,gpm_percentage]);
+						
+                        mytable.draw();												
 						});	
                     });              
                 } else {
